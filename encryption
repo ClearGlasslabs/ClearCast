@@ -1,0 +1,248 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# =========================
+# CONFIG — EDIT AS NEEDED
+# =========================
+: "${CLEARGLASS_DIR:="$HOME/CLEARGLASS"}"
+: "${OUT_DIR:="$HOME/CLEARGLASS_encrypted"}"
+: "${DECRYPT_DIR:="$HOME/CLEARGLASS_decrypted"}"
+# One or more age public keys (age1...)
+: "${AGE_RECIPIENTS:=""}"
+# Optional GPG recipient emails or key IDs, space separated
+: "${GPG_RECIPIENTS:=""}"
+# Set yes to allow optional wipe after verified encryption (will still ask)
+: "${WIPE_AFTER_ENCRYPT:="no"}"
+# Optional config file to override the above (key=value lines)
+CFG_FILE="${CFG_FILE:-"$HOME/.clearglass.enc.env"}"
+
+# =========================
+# INTERNALS
+# =========================
+OS="$(uname -s || true)"
+AGE_KEYFILE="$HOME/.config/age/keys.txt"
+
+load_cfg() {
+  if [[ -f "$CFG_FILE" ]]; then
+    # shellcheck disable=SC1090
+    source "$CFG_FILE"
+  fi
+}
+
+need() {
+  command -v "$1" >/dev/null 2>&1 || { echo "Missing dependency: $1"; exit 1; }
+}
+
+log() { printf '%s\n' "$*"; }
+
+confirm() {
+  read -r -p "$1 [y/N]: " ans
+  [[ "$ans" == "y" || "$ans" == "Y" ]]
+}
+
+# =========================
+# AGE KEY MANAGEMENT
+# =========================
+keygen_age() {
+  need age-keygen
+  mkdir -p "$(dirname "$AGE_KEYFILE")"
+  if [[ -f "$AGE_KEYFILE" ]]; then
+    log "Key already exists: $AGE_KEYFILE"
+  else
+    age-keygen -o "$AGE_KEYFILE"
+    log "Generated: $AGE_KEYFILE"
+  fi
+  log "Public key(s):"
+  grep -E '^# public key:' "$AGE_KEYFILE" | sed 's/^# public key: //'
+}
+
+show_age_pub() {
+  [[ -f "$AGE_KEYFILE" ]] || { echo "No key at $AGE_KEYFILE"; exit 1; }
+  grep -E '^# public key:' "$AGE_KEYFILE" | sed 's/^# public key: //'
+}
+
+# =========================
+# ENCRYPT (age)
+# =========================
+encrypt_age() {
+  need age
+  [[ -d "$CLEARGLASS_DIR" ]] || { echo "Missing CLEARGLASS_DIR: $CLEARGLASS_DIR"; exit 1; }
+  [[ -n "${AGE_RECIPIENTS// }" ]] || { echo "AGE_RECIPIENTS is empty"; exit 1; }
+
+  mkdir -p "$OUT_DIR"
+  shopt -s globstar nullglob
+  ts="$(date -u +"%Y-%m-%dT%H-%M-%SZ")"
+  manifest="$OUT_DIR/manifest-$ts.txt"
+  count=0
+
+  for f in "$CLEARGLASS_DIR"/**/*; do
+    [[ -f "$f" ]] || continue
+    rel="${f#$CLEARGLASS_DIR/}"
+    out="$OUT_DIR/$rel.age"
+    mkdir -p "$(dirname "$out")"
+    printf '%s\n' "$AGE_RECIPIENTS" | tr ' ' '\n' | age -r - -o "$out" --armor -- "$f"
+    sha="$(shasum -a 256 "$f" | awk '{print $1}')"
+    printf '%s|%s\n' "$rel" "$sha" >> "$manifest"
+    count=$((count+1))
+  done
+  log "Encrypted $count file(s). Manifest: $manifest"
+
+  if [[ "$WIPE_AFTER_ENCRYPT" == "yes" ]]; then
+    if confirm "Wipe originals now? Type y to confirm"; then
+      rm -rf "$CLEARGLASS_DIR"
+      log "Originals wiped."
+    else
+      log "Wipe cancelled."
+    fi
+  fi
+}
+
+# =========================
+# DECRYPT (age)
+# =========================
+decrypt_age() {
+  need age
+  [[ -d "$OUT_DIR" ]] || { echo "Missing OUT_DIR: $OUT_DIR"; exit 1; }
+  [[ -f "$AGE_KEYFILE" ]] || { echo "Missing private key: $AGE_KEYFILE"; exit 1; }
+  mkdir -p "$DECRYPT_DIR"
+  shopt -s globstar nullglob
+  count=0
+  for f in "$OUT_DIR"/**/*.age; do
+    [[ -f "$f" ]] || continue
+    rel="${f#$OUT_DIR/}"
+    rel="${rel%.age}"
+    out="$DECRYPT_DIR/$rel"
+    mkdir -p "$(dirname "$out")"
+    age -d -i "$AGE_KEYFILE" -o "$out" -- "$f"
+    count=$((count+1))
+  done
+  log "Decrypted $count file(s) to $DECRYPT_DIR"
+}
+
+# =========================
+# ENCRYPT (GPG) optional
+# =========================
+encrypt_gpg() {
+  need gpg
+  [[ -d "$CLEARGLASS_DIR" ]] || { echo "Missing CLEARGLASS_DIR: $CLEARGLASS_DIR"; exit 1; }
+  [[ -n "${GPG_RECIPIENTS// }" ]] || { echo "GPG_RECIPIENTS is empty"; exit 1; }
+  mkdir -p "$OUT_DIR"
+  shopt -s globstar nullglob
+  count=0
+  for f in "$CLEARGLASS_DIR"/**/*; do
+    [[ -f "$f" ]] || continue
+    rel="${f#$CLEARGLASS_DIR/}"
+    out="$OUT_DIR/$rel.gpg"
+    mkdir -p "$(dirname "$out")"
+    # shellcheck disable=SC2086
+    gpg --yes -o "$out" -e $(for r in $GPG_RECIPIENTS; do printf -- '-r %s ' "$r"; done) "$f"
+    count=$((count+1))
+  done
+  log "GPG-encrypted $count file(s)."
+}
+
+# =========================
+# PERMISSIONS PRESETS
+# =========================
+set_perms() {
+  preset="${1:-}"; target="${2:-$CLEARGLASS_DIR}"
+  [[ -n "$preset" ]] || { echo "Usage: $0 set-perms <private|team|archive> [TARGET_DIR]"; exit 1; }
+  [[ -d "$target" ]] || { echo "Target not found: $target"; exit 1; }
+
+  case "$preset" in
+    private)
+      chmod -R 700 "$target" || true
+      if [[ "$OS" == "Darwin" ]]; then
+        chmod -R -N "$target" || true
+      fi
+      ;;
+    team)
+      chmod -R 770 "$target" || true
+      if [[ "$OS" == "Darwin" ]]; then
+        # Example: allow staff group rwx
+        chmod -R +a "group:staff allow read,write,execute" "$target" || true
+      fi
+      ;;
+    archive)
+      chmod -R 744 "$target" || true
+      if [[ "$OS" == "Darwin" ]]; then
+        chmod -R -N "$target" || true
+      fi
+      ;;
+    *)
+      echo "Unknown preset: $preset"; exit 1;;
+  esac
+  log "Applied '$preset' permissions to $target"
+}
+
+# =========================
+# SHARE BUNDLE
+# =========================
+share_bundle() {
+  need zip
+  [[ -d "$OUT_DIR" ]] || { echo "Missing OUT_DIR: $OUT_DIR"; exit 1; }
+  ts="$(date -u +"%Y%m%d-%H%M%SZ")"
+  dest="${OUT_DIR%/}-share-$ts.zip"
+  (
+    cd "$OUT_DIR"
+    # include existing manifests if any; otherwise list encrypted files
+    if ! ls manifest-*.txt >/dev/null 2>&1; then
+      find . -type f -name '*.age' -o -name '*.gpg' | sed 's|^\./||' > "manifest-$ts.txt"
+    fi
+    zip -r "$dest" .
+  )
+  log "Created: $dest"
+}
+
+# =========================
+# HELP
+# =========================
+usage() {
+cat <<'H'
+Usage: ./clearglass.sh <command>
+
+Commands:
+  keygen-age           Generate age keypair and print public key
+  show-age-pub         Print your age public key
+  encrypt-age          Encrypt CLEARGLASS_DIR to OUT_DIR using age
+  decrypt-age          Decrypt OUT_DIR into DECRYPT_DIR using age
+  encrypt-gpg          Encrypt using GPG recipients (optional)
+  set-perms PRESET     Apply permission preset: private | team | archive
+  share                Zip OUT_DIR with manifest for sharing
+  env                  Print effective config
+  help                 Show this help
+
+Config override file: $HOME/.clearglass.enc.env (key=value)
+H
+}
+
+print_env() {
+  cat <<E
+CLEARGLASS_DIR=$CLEARGLASS_DIR
+OUT_DIR=$OUT_DIR
+DECRYPT_DIR=$DECRYPT_DIR
+AGE_RECIPIENTS=${AGE_RECIPIENTS:+<set>}
+GPG_RECIPIENTS=${GPG_RECIPIENTS:-}
+WIPE_AFTER_ENCRYPT=$WIPE_AFTER_ENCRYPT
+CFG_FILE=$CFG_FILE
+AGE_KEYFILE=$AGE_KEYFILE
+E
+}
+
+# =========================
+# MAIN
+# =========================
+load_cfg
+cmd="${1:-help}"; shift || true
+case "$cmd" in
+  keygen-age) keygen_age ;;
+  show-age-pub) show_age_pub ;;
+  encrypt-age) encrypt_age ;;
+  decrypt-age) decrypt_age ;;
+  encrypt-gpg) encrypt_gpg ;;
+  set-perms) set_perms "$@" ;;
+  share) share_bundle ;;
+  env) print_env ;;
+  help|--help|-h) usage ;;
+  *) echo "Unknown command: $cmd"; usage; exit 1;;
+esac
