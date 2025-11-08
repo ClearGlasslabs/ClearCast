@@ -197,22 +197,24 @@ share_bundle() {
 # =========================
 # HELP
 # =========================
+SCRIPT_NAME="${0##*/}"
+
 usage() {
-cat <<'H'
-Usage: ./clearglass.sh <command>
+cat <<H
+Usage: ./$SCRIPT_NAME <command>
 
 Commands:
-  keygen-age           Generate age keypair and print public key
-  show-age-pub         Print your age public key
-  encrypt-age          Encrypt CLEARGLASS_DIR to OUT_DIR using age
-  decrypt-age          Decrypt OUT_DIR into DECRYPT_DIR using age
-  encrypt-gpg          Encrypt using GPG recipients (optional)
-  set-perms PRESET     Apply permission preset: private | team | archive
-  share                Zip OUT_DIR with manifest for sharing
-  env                  Print effective config
-  help                 Show this help
+  keygen-age                 Generate age keypair and print public key
+  show-age-pub               Print your age public key
+  encrypt-age                Encrypt CLEARGLASS_DIR to OUT_DIR using age
+  decrypt-age                Decrypt OUT_DIR into DECRYPT_DIR using age
+  encrypt-gpg                Encrypt using GPG recipients (optional)
+  set-perms PRESET [TARGET]  Apply preset (private|team|archive) to directory
+  share                      Zip OUT_DIR with manifest for sharing
+  env                        Print effective config
+  help                       Show this help
 
-Config override file: $HOME/.clearglass.enc.env (key=value)
+Config override file: $CFG_FILE (key=value)
 H
 }
 
