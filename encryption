@@ -24,6 +24,17 @@ AGE_KEYFILE="$HOME/.config/age/keys.txt"
 
 load_cfg() {
   if [[ -f "$CFG_FILE" ]]; then
+    # Validate config file is owned by current user and not world-writable
+    if [[ "$(stat -c '%u' "$CFG_FILE" 2>/dev/null || stat -f '%u' "$CFG_FILE" 2>/dev/null)" != "$(id -u)" ]]; then
+      log "Warning: Config file not owned by current user, skipping: $CFG_FILE"
+      return 0
+    fi
+    local perms
+    perms="$(stat -c '%a' "$CFG_FILE" 2>/dev/null || stat -f '%Lp' "$CFG_FILE" 2>/dev/null)"
+    if [[ "${perms: -1}" != "0" && "${perms: -1}" != "4" ]]; then
+      log "Warning: Config file is world-writable or world-readable, skipping: $CFG_FILE"
+      return 0
+    fi
     # shellcheck disable=SC1090
     source "$CFG_FILE"
   fi
@@ -75,12 +86,18 @@ encrypt_age() {
   manifest="$OUT_DIR/manifest-$ts.txt"
   count=0
 
+  # Build recipient arguments array
+  recip_args=()
+  for r in $AGE_RECIPIENTS; do
+    recip_args+=(-r "$r")
+  done
+
   for f in "$CLEARGLASS_DIR"/**/*; do
     [[ -f "$f" ]] || continue
-    rel="${f#$CLEARGLASS_DIR/}"
+    rel="${f#"$CLEARGLASS_DIR"/}"
     out="$OUT_DIR/$rel.age"
     mkdir -p "$(dirname "$out")"
-    printf '%s\n' "$AGE_RECIPIENTS" | tr ' ' '\n' | age -r - -o "$out" --armor -- "$f"
+    age "${recip_args[@]}" -o "$out" --armor -- "$f"
     sha="$(shasum -a 256 "$f" | awk '{print $1}')"
     printf '%s|%s\n' "$rel" "$sha" >> "$manifest"
     count=$((count+1))
@@ -109,7 +126,7 @@ decrypt_age() {
   count=0
   for f in "$OUT_DIR"/**/*.age; do
     [[ -f "$f" ]] || continue
-    rel="${f#$OUT_DIR/}"
+    rel="${f#"$OUT_DIR"/}"
     rel="${rel%.age}"
     out="$DECRYPT_DIR/$rel"
     mkdir -p "$(dirname "$out")"
@@ -128,14 +145,20 @@ encrypt_gpg() {
   [[ -n "${GPG_RECIPIENTS// }" ]] || { echo "GPG_RECIPIENTS is empty"; exit 1; }
   mkdir -p "$OUT_DIR"
   shopt -s globstar nullglob
+
+  # Build recipient arguments array
+  gpg_recip_args=()
+  for r in $GPG_RECIPIENTS; do
+    gpg_recip_args+=(-r "$r")
+  done
+
   count=0
   for f in "$CLEARGLASS_DIR"/**/*; do
     [[ -f "$f" ]] || continue
-    rel="${f#$CLEARGLASS_DIR/}"
+    rel="${f#"$CLEARGLASS_DIR"/}"
     out="$OUT_DIR/$rel.gpg"
     mkdir -p "$(dirname "$out")"
-    # shellcheck disable=SC2086
-    gpg --yes -o "$out" -e $(for r in $GPG_RECIPIENTS; do printf -- '-r %s ' "$r"; done) "$f"
+    gpg --yes -o "$out" -e "${gpg_recip_args[@]}" "$f"
     count=$((count+1))
   done
   log "GPG-encrypted $count file(s)."
@@ -186,8 +209,10 @@ share_bundle() {
   (
     cd "$OUT_DIR"
     # include existing manifests if any; otherwise list encrypted files
-    if ! ls manifest-*.txt >/dev/null 2>&1; then
-      find . -type f -name '*.age' -o -name '*.gpg' | sed 's|^\./||' > "manifest-$ts.txt"
+    shopt -s nullglob
+    local manifests=(manifest-*.txt)
+    if [[ ${#manifests[@]} -eq 0 ]]; then
+      find . -type f \( -name '*.age' -o -name '*.gpg' \) | sed 's|^\./||' > "manifest-$ts.txt"
     fi
     zip -r "$dest" .
   )
