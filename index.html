@@ -3,87 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ClearGlassInc.ca | Future Through Transparency</title>
+  <title>NEXUS OMEGA · ClearGlass Quantum Intelligence Core · v11.0</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
+  <!-- Ambient layers -->
   <canvas id="starfield" aria-hidden="true"></canvas>
+  <div class="scanlines"  aria-hidden="true"></div>
+  <div class="vignette"   aria-hidden="true"></div>
 
-  <header class="topbar">
-    <div class="brand">ClearGlassInc.ca</div>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#metrics">Impact</a>
-      <a href="#contact" class="cta-link">Launch With Us</a>
-    </nav>
-  </header>
+  <!-- ── Boot Screen ─────────────────────────────────────────────────────── -->
+  <div id="boot-screen" class="boot-screen">
+    <div class="boot-logo">
+      <div class="boot-hex">⬡</div>
+      <div class="boot-title">NEXUS OMEGA</div>
+      <div class="boot-sub">ClearGlass Quantum Intelligence Core · v11.0</div>
+    </div>
+    <div id="boot-log" class="boot-log"></div>
+    <div class="boot-progress-wrap">
+      <div id="boot-progress-bar" class="boot-progress-bar"></div>
+    </div>
+  </div>
 
-  <main>
-    <section class="hero">
-      <p class="eyebrow">NEXT-GEN STRATEGY + BUILD</p>
-      <h1>Designing a <span>transparent</span> future, one intelligent product at a time.</h1>
-      <p class="subtext">
-        We blend AI, cloud engineering, and cinematic design to build businesses that feel alive.
-      </p>
-      <div class="hero-actions">
-        <a class="btn primary" href="#contact">Start Project</a>
-        <a class="btn ghost" href="#services">Explore Services</a>
+  <!-- ── Main Application (hidden until boot completes) ──────────────────── -->
+  <div id="app" class="app" style="display:none">
+
+    <header id="app-header" class="app-header"></header>
+
+    <!-- Live data ticker -->
+    <div class="ticker-bar">
+      <span class="ticker-live-badge">LIVE</span>
+      <div class="ticker-track">
+        <div id="ticker-content" class="ticker-content"></div>
       </div>
-    </section>
+    </div>
 
-    <section id="about" class="panel">
-      <h2>Why ClearGlassInc.ca?</h2>
-      <p>
-        We help ambitious teams launch fast, scale smart, and stay radically clear. Our model combines
-        precision engineering with bold design so your brand not only works—it moves people.
-      </p>
-    </section>
+    <!-- Tab navigation -->
+    <nav id="app-nav" class="app-nav"></nav>
 
-    <section id="services" class="cards">
-      <article class="card">
-        <h3>AI Product Engineering</h3>
-        <p>From MVP to production-grade systems with modern architecture and automation.</p>
-      </article>
-      <article class="card">
-        <h3>Immersive Brand Experience</h3>
-        <p>Futuristic interfaces, premium visual systems, and memorable digital journeys.</p>
-      </article>
-      <article class="card">
-        <h3>Growth Intelligence</h3>
-        <p>Real-time analytics, optimization loops, and strategic execution driven by data.</p>
-      </article>
-    </section>
+    <!-- Tab panes -->
+    <main id="app-main" class="app-main">
+      <div id="tab-dashboard"    class="tab-pane active"></div>
+      <div id="tab-pipeline"     class="tab-pane"></div>
+      <div id="tab-contracts"    class="tab-pane"></div>
+      <div id="tab-tasks"        class="tab-pane"></div>
+      <div id="tab-quantum"      class="tab-pane"></div>
+      <div id="tab-ai"           class="tab-pane"></div>
+      <div id="tab-surveillance" class="tab-pane"></div>
+    </main>
 
-    <section id="metrics" class="metrics panel">
-      <div>
-        <h3><span class="counter" data-target="120">0</span>+</h3>
-        <p>Products Delivered</p>
-      </div>
-      <div>
-        <h3><span class="counter" data-target="42">0</span>%</h3>
-        <p>Average Conversion Lift</p>
-      </div>
-      <div>
-        <h3><span class="counter" data-target="99">0</span>.9%</h3>
-        <p>Cloud Uptime Confidence</p>
-      </div>
-    </section>
+  </div>
 
-    <section id="contact" class="panel contact">
-      <h2>Ready to activate your future?</h2>
-      <p>Let’s build your next high-impact product experience.</p>
-      <a class="btn primary" href="mailto:hello@clearglassinc.ca">hello@clearglassinc.ca</a>
-    </section>
-  </main>
-
-  <footer>
-    © <span id="year"></span> ClearGlassInc.ca • Built for speed, clarity, and momentum.
-  </footer>
-
-  <script src="script.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>
