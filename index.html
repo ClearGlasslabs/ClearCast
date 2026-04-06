@@ -1,142 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>⚡ CLEARGLASSINC · OPERATION ARES · NAVAL SPECIAL PROGRAMS DIVISION</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Space+Grotesk:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #00020b; --bg2:#020816; --line: rgba(0,212,255,.22); --text:#eaf2ff;
-      --gold:#ffcc44; --cyan:#22ddcc; --red:#ff6644; --muted:#8aa0c0;
-    }
-    body { font-family: "Space Grotesk",sans-serif; color:var(--text); background:radial-gradient(circle at 20% 0%, #071a35 0%, var(--bg) 45%); height:100vh; overflow:hidden; }
-    .storm-bg{position:fixed;inset:0;background:repeating-linear-gradient(45deg,rgba(0,255,200,.02)0 2px,transparent 2px 12px);animation: drift 18s linear infinite;}
-    @keyframes drift{to{transform:translate(2%,2%)}}
-    .app{position:relative;z-index:1;display:flex;height:100vh}
-    .sidebar{width:300px;background:linear-gradient(180deg,#010513f0,#00020ef5);border-right:1px solid var(--line);display:flex;flex-direction:column}
-    .insignia{padding:24px;border-bottom:1px solid var(--line)}
-    .insignia-main{font-family:Orbitron,monospace;font-size:24px;font-weight:800;color:var(--gold)}
-    .insignia-sub{font-size:10px;letter-spacing:2px;color:var(--muted);margin-top:6px}
-    .clearance{display:inline-block;margin-top:12px;padding:4px 10px;border-radius:99px;border:1px solid #cc3366;color:#cc3366;font-size:9px}
-    .nav-mission{padding:18px;display:grid;gap:8px}
-    .mission-item{padding:10px 12px;border-radius:12px;color:var(--muted);border:1px solid transparent}
-    .mission-item.active,.mission-item:hover{border-color:var(--line);background:rgba(0,212,255,.08);color:#fff}
-    .ops-footer{margin-top:auto;padding:16px;border-top:1px solid var(--line);font:11px "JetBrains Mono",monospace;color:var(--muted)}
-
-    .command{flex:1;display:flex;flex-direction:column;min-width:0}
-    .top{padding:12px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;background:#01040de0}
-    .quantum-warning{padding:10px 20px;border-bottom:1px solid rgba(255,102,68,.35);background:rgba(255,102,68,.08);color:#ffd4c7;font:600 11px "JetBrains Mono",monospace;letter-spacing:.4px}
-    .op-name{font-family:Orbitron,monospace;font-size:12px;letter-spacing:2px;color:#aaccff}
-    .stats{display:flex;gap:24px}
-    .stat b{font-family:Orbitron,monospace;color:var(--gold)}
-    .stat span{display:block;font-size:9px;color:var(--muted);letter-spacing:1px}
-
-    .grid{padding:16px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px;overflow:auto}
-    .panel{background:linear-gradient(145deg,#020816f0,#00040df5);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-    .panel h3{padding:12px 14px;border-bottom:1px solid var(--line);font:600 11px Orbitron,monospace;letter-spacing:1.5px}
-    .panel .content{padding:14px}
-    .col-3{grid-column:span 3}.col-6{grid-column:span 6}.col-12{grid-column:span 12}
-    .kpi{font:800 32px Orbitron,monospace;color:var(--gold)}
-    .threat{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-    .dot{width:8px;height:8px;border-radius:50%}.crit{background:#cc3366}.high{background:var(--red)}
-    .map,.graph{height:220px;border-radius:10px;border:1px dashed var(--line);display:grid;place-items:center;color:var(--muted);font-family:"JetBrains Mono",monospace}
-    .chat{height:180px;overflow:auto;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px;font:12px "JetBrains Mono",monospace}
-    .msg{padding:8px 10px;border-radius:8px;margin-bottom:8px}.bot{background:rgba(255,204,68,.08)}.user{background:rgba(34,221,204,.08);text-align:right}
-    .input{margin-top:10px;display:flex;gap:10px}
-    input,button,a.btn{border-radius:999px;border:1px solid var(--line);background:#071020;color:#fff;padding:9px 14px;text-decoration:none}
-    button,a.btn{cursor:pointer;background:linear-gradient(135deg,rgba(0,212,255,.14),rgba(255,204,68,.08))}
-    input{flex:1}
-    @media (max-width:1200px){.grid{grid-template-columns:repeat(6,minmax(0,1fr))}.col-3,.col-6,.col-12{grid-column:span 6}.sidebar{display:none}}
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#007bff" />
+    <title>ClearGlassInc Intelligence App</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="storm-bg"></div>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="insignia">
-        <div class="insignia-main">⚡ CLEARGLASSINC</div>
-        <div class="insignia-sub">OPERATION ARES · NAVAL SPECIAL PROGRAMS DIVISION</div>
-        <span class="clearance">TS/SCI · NOFORN</span>
-      </div>
-      <nav class="nav-mission">
-        <div class="mission-item active">⚡ ZEUS · GLOBAL OVERWATCH</div>
-        <div class="mission-item">🛡️ ATHENA · THREAT FUSION</div>
-        <div class="mission-item">⚔️ ARES · KILL CHAIN</div>
-        <div class="mission-item">🌊 POSEIDON · NAVAL TRACKING</div>
-        <a class="mission-item" href="https://clear-glass-social--dezzy231.replit.app" target="_blank" rel="noopener noreferrer">🔗 OPEN SOCIAL APP</a>
-      </nav>
-      <div class="ops-footer">PROJECT ARES · ACTIVE · LAST SWEEP <span id="sync">0.0s</span></div>
-    </aside>
+    <header>
+        <h1>ClearGlassInc Intelligence App</h1>
+        <p>Real-Time Nerve Live Tracking</p>
+    </header>
 
-    <main class="command">
-      <header class="top">
-        <div class="op-name">⚓ OPERATION ARES · REAL-TIME THREAT DOMINANCE · PALANTIR CLASS</div>
-        <div class="stats">
-          <div class="stat"><b id="entities">47</b><span>ENTITIES</span></div>
-          <div class="stat"><b id="relations">89</b><span>CONNECTIONS</span></div>
-          <div class="stat"><b id="threats">18</b><span>THREATS</span></div>
-        </div>
-      </header>
-      <div class="quantum-warning">⚠️ QUANTUM OUTLOOK: Analysts forecast viable quantum attacks could break major cryptographic algorithms by 2032—including the US’s AES, China’s ZUC, and the EU’s SNOW.</div>
+    <main>
+        <canvas id="nerveCanvas" width="400" height="300" aria-label="Animated nerve tracking visualization"></canvas>
 
-      <section class="grid">
-        <article class="panel col-3"><h3>⚡ ZEUS · QUANTUM VOLUME</h3><div class="content"><div class="kpi">256</div><small>COHERENCE 98.7%</small></div></article>
-        <article class="panel col-3"><h3>🛡️ ATHENA · THREAT INDEX</h3><div class="content"><div class="kpi">73</div><small>ELEVATED</small></div></article>
-        <article class="panel col-3"><h3>⚔️ ARES · APT ACTIVITY</h3><div class="content"><div class="kpi">12</div><small>NATION-STATE ACTORS</small></div></article>
-        <article class="panel col-3"><h3>🌊 POSEIDON · NAVAL ASSETS</h3><div class="content"><div class="kpi">38</div><small>GLOBAL WATERS</small></div></article>
-
-        <article class="panel col-6"><h3>🌍 ZEUS GEOSPATIAL</h3><div class="content"><div class="map">LIVE MAP PLACEHOLDER</div></div></article>
-        <article class="panel col-6"><h3>🕸️ ATHENA ENTITY GRAPH</h3><div class="content"><div class="graph">LIVE GRAPH PLACEHOLDER</div></div></article>
-
-        <article class="panel col-6"><h3>⚔️ ARES THREAT FEED</h3><div class="content" id="feed"></div></article>
-        <article class="panel col-6"><h3>🌊 POSEIDON NAVAL INTEL</h3><div class="content">
-          <div class="threat"><span class="dot high"></span>CVN-78 Gerald R. Ford · ATLANTIC</div>
-          <div class="threat"><span class="dot high"></span>CVN-71 Theodore Roosevelt · PACIFIC</div>
-          <div class="threat"><span class="dot crit"></span>Unknown Submarine Contact · TRACKED</div>
-        </div></article>
-
-        <article class="panel col-12"><h3>👁️ HERMES AI · SPECIAL ACCESS</h3><div class="content">
-          <div id="chat" class="chat"></div>
-          <div class="input">
-            <input id="q" placeholder="Ask Hermes: Zeus threat matrix / Ares APT analysis" />
-            <button id="send">SEND</button>
-            <a class="btn" href="https://clear-glass-social--dezzy231.replit.app" target="_blank" rel="noopener noreferrer">SOCIAL APP</a>
-          </div>
-        </div></article>
-      </section>
+        <section id="dataDisplay" aria-live="polite">
+            <h2>Live Tracking Information</h2>
+            <p id="signalStrength">Signal Strength: Calculating...</p>
+            <p id="nerveActivity">Nerve Activity: Initializing...</p>
+            <p id="trackingStatus">Tracking Status: Offline</p>
+        </section>
     </main>
-  </div>
 
-  <script>
-    const threats = [
-      ["critical", "APT41 C2 beacon targeting naval networks", "14:32:21Z"],
-      ["high", "Dark-web credential sale involving fleet users", "14:28:05Z"],
-      ["critical", "Exploit attempts against DoD email edge", "14:15:44Z"],
-      ["high", "Spear-phishing campaign against naval leadership", "13:58:22Z"]
-    ];
-    const feed = document.getElementById('feed');
-    feed.innerHTML = threats.map(([sev,msg,time]) => `<div class="threat"><span class="dot ${sev==='critical'?'crit':'high'}"></span><div><b>${msg}</b><br><small>${time.toUpperCase()} · ${sev.toUpperCase()}</small></div></div>`).join('');
+    <footer>
+        <p>© 2026 ClearGlassInc. Developed for Desmond Otieno.</p>
+    </footer>
 
-    const chat = document.getElementById('chat');
-    const q = document.getElementById('q');
-    const send = document.getElementById('send');
-    const bot = {
-      zeus: "ZEUS: Critical beaconing confirmed. Recommend immediate blocklist and credential reset.",
-      ares: "ARES: 3 primary actors linked to active maritime targeting campaign.",
-      poseidon: "POSEIDON: Fleet posture stable; one anomalous underwater contact persists.",
-      athena: "ATHENA: 47 entities, 89 relations, highest-confidence edge links APT41 to naval target set."
-    };
-    function add(role,text){ const d=document.createElement('div'); d.className=`msg ${role}`; d.textContent=(role==='user'?'👤 ':'🤖 ')+text; chat.appendChild(d); chat.scrollTop=chat.scrollHeight; }
-    function answer(v){ const t=v.toLowerCase(); if(t.includes('zeus')) return bot.zeus; if(t.includes('ares')||t.includes('apt')) return bot.ares; if(t.includes('poseidon')||t.includes('naval')) return bot.poseidon; if(t.includes('athena')||t.includes('entity')) return bot.athena; return 'HERMES: Available commands: Zeus, Ares, Poseidon, Athena.'; }
-    send.onclick = () => { const v=q.value.trim(); if(!v) return; add('user', v); q.value=''; setTimeout(()=>add('bot', answer(v)), 100); };
-    q.addEventListener('keydown', e => { if(e.key === 'Enter') send.click(); });
-
-    setInterval(() => {
-      document.getElementById('sync').textContent = (Math.random()*2.5).toFixed(1) + 's';
-      document.getElementById('threats').textContent = String(16 + Math.floor(Math.random()*4));
-    }, 2400);
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
