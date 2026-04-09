@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClearGlassInc Artemis | Gallery</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html">⚡ ClearGlassInc Artemis</a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a href="index.html" data-page="index">Home</a>
+        <a href="about.html" data-page="about">About</a>
+        <a href="gallery.html" data-page="gallery">Gallery</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main class="container" id="mission-gallery">
+      <section class="panel">
+        <h1>Mission Gallery</h1>
+        <p>Click any card or thumbnail to view an enlarged image in the modal.</p>
+      </section>
+
+      <section class="card-grid">
+        <button class="card thumb" data-modal-image="assets/ocean.svg" data-modal-caption="Naval surveillance vector map">
+          <img src="assets/ocean.svg" alt="Naval surveillance vector map" />
+          <h3>Poseidon Vector</h3>
+        </button>
+        <button class="card thumb" data-modal-image="assets/network.svg" data-modal-caption="Entity correlation network">
+          <img src="assets/network.svg" alt="Entity correlation network" />
+          <h3>Athena Correlation</h3>
+        </button>
+        <button class="card thumb" data-modal-image="assets/radar.svg" data-modal-caption="Live radar sweep concept">
+          <img src="assets/radar.svg" alt="Live radar sweep concept" />
+          <h3>Ares Radar</h3>
+        </button>
+      </section>
+    </main>
+
+    <div class="modal" id="image-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Image viewer">
+      <button class="modal-close" id="modal-close" aria-label="Close image viewer">✕</button>
+      <img id="modal-image" src="" alt="Expanded view" />
+      <p id="modal-caption"></p>
+    </div>
+
+    <script src="main.js" defer></script>
+  </body>
+</html>

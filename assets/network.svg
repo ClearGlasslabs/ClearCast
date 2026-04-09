@@ -1,0 +1,19 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'>
+  <rect width='1200' height='800' fill='#06091a'/>
+  <g stroke='#41d9ff' stroke-width='3' stroke-opacity='.4'>
+    <line x1='220' y1='160' x2='520' y2='280'/>
+    <line x1='520' y1='280' x2='840' y2='220'/>
+    <line x1='840' y1='220' x2='980' y2='470'/>
+    <line x1='520' y1='280' x2='410' y2='520'/>
+    <line x1='410' y1='520' x2='750' y2='600'/>
+  </g>
+  <g fill='#22ddcc'>
+    <circle cx='220' cy='160' r='20'/>
+    <circle cx='520' cy='280' r='26'/>
+    <circle cx='840' cy='220' r='20'/>
+    <circle cx='980' cy='470' r='18'/>
+    <circle cx='410' cy='520' r='18'/>
+    <circle cx='750' cy='600' r='16'/>
+  </g>
+  <text x='70' y='90' fill='#b9c8ff' font-family='Arial' font-size='42'>ATHENA ENTITY GRAPH</text>
+</svg>

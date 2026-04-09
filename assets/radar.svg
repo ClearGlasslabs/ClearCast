@@ -1,0 +1,14 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'>
+  <rect width='1200' height='800' fill='#03101b'/>
+  <g fill='none' stroke='#31f6a5' stroke-opacity='.45'>
+    <circle cx='600' cy='400' r='80'/>
+    <circle cx='600' cy='400' r='160'/>
+    <circle cx='600' cy='400' r='240'/>
+    <circle cx='600' cy='400' r='320'/>
+    <line x1='280' y1='400' x2='920' y2='400'/>
+    <line x1='600' y1='80' x2='600' y2='720'/>
+  </g>
+  <path d='M600 400 L860 260 A320 320 0 0 0 600 80 Z' fill='#31f6a5' fill-opacity='.18'/>
+  <circle cx='720' cy='320' r='10' fill='#ff6644'/>
+  <text x='60' y='100' fill='#9fffd7' font-family='Arial' font-size='42'>ARES RADAR FEED</text>
+</svg>

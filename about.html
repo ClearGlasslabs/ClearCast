@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClearGlassInc Artemis | About</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html">⚡ ClearGlassInc Artemis</a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a href="index.html" data-page="index">Home</a>
+        <a href="about.html" data-page="about">About</a>
+        <a href="gallery.html" data-page="gallery">Gallery</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="panel">
+        <h1>About ClearGlassInc Artemis</h1>
+        <p>
+          Artemis is presented as a multi-page static experience. Every navigation control uses
+          local links so the site works without a server or API.
+        </p>
+      </section>
+
+      <section class="panel">
+        <h2>What was fixed</h2>
+        <ul>
+          <li>Navigation links now target real local pages and sections.</li>
+          <li>Cards are implemented as accessible links/buttons with valid destinations.</li>
+          <li>Image click-to-enlarge behavior is handled with a keyboard-friendly modal.</li>
+        </ul>
+      </section>
+
+      <section class="panel">
+        <h2>Preview Image</h2>
+        <button class="thumb" data-modal-image="assets/network.svg" data-modal-caption="Ontology relationship map preview">
+          <img src="assets/network.svg" alt="Ontology relationship map preview" />
+        </button>
+      </section>
+    </main>
+
+    <div class="modal" id="image-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Image viewer">
+      <button class="modal-close" id="modal-close" aria-label="Close image viewer">✕</button>
+      <img id="modal-image" src="" alt="Expanded view" />
+      <p id="modal-caption"></p>
+    </div>
+
+    <script src="main.js" defer></script>
+  </body>
+</html>
