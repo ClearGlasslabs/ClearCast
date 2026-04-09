@@ -1,0 +1,16 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'>
+  <defs>
+    <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0%' stop-color='#062447'/><stop offset='100%' stop-color='#020816'/>
+    </linearGradient>
+  </defs>
+  <rect width='1200' height='800' fill='url(#g)'/>
+  <g fill='none' stroke='#3ce2ff' stroke-opacity='.35'>
+    <path d='M0 150 Q 200 80 400 150 T 800 150 T 1200 150'/>
+    <path d='M0 300 Q 200 230 400 300 T 800 300 T 1200 300'/>
+    <path d='M0 450 Q 200 380 400 450 T 800 450 T 1200 450'/>
+  </g>
+  <circle cx='860' cy='330' r='90' fill='none' stroke='#ffcc44' stroke-width='6'/>
+  <circle cx='860' cy='330' r='25' fill='#ffcc44'/>
+  <text x='80' y='100' fill='#9fe8ff' font-family='Arial' font-size='42'>POSEIDON SURVEILLANCE</text>
+</svg>
