@@ -160,3 +160,45 @@ footer {
   nav { display: none; }
   .hero { padding: 2.5rem 1.4rem; }
 }
+
+.legal-links {
+  margin-top: .5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.legal-links a,
+.legal-back,
+.legal-page a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.legal-page {
+  width: min(900px, 92vw);
+  margin: 3rem auto;
+  line-height: 1.6;
+}
+
+.legal-page h1 {
+  margin-top: .6rem;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+
+.legal-page h2 {
+  margin-top: 1.5rem;
+}
+
+.legal-page ul {
+  padding-left: 1.3rem;
+}
+
+.legal-note {
+  margin-top: 2rem;
+  font-size: .95rem;
+  color: var(--muted);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 1rem;
+}
