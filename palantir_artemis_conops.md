@@ -8,6 +8,16 @@ This document defines a production-grade, full-stack blueprint for **ClearGlassI
 
 ---
 
+## Cinematic Product Render Prompt
+
+```text
+Prompt: Cinematic futuristic product render for ClearGlassInc Artemis: an intelligent transparent glass interface inside a luxury high-security enterprise command suite; adaptive electrochromic glass with dynamic opacity zones; floating holographic overlays with mission graph nodes, threat vectors, and AI copilots; ambient AI control surfaces and gesture-responsive UI; premium clean industrial architecture (brushed titanium, matte ceramic, smoked glass); ultra-realistic ray-traced materials, micro-scratches, physically accurate reflections/refractions, volumetric light shafts, global illumination, shallow depth of field; royal purple and white light accents, subtle bloom, high-contrast premium corporate aesthetic, next-generation transparent computing, photorealistic, highly detailed, 16:9, 8k.
+
+Negative prompt: cartoon, low-res, noisy, over-saturated neon chaos, text artifacts, distorted hands, warped perspective, clutter, watermark, logo artifacts.
+
+Suggested params (engine-agnostic): aspect_ratio=16:9, style=cinematic_photoreal, quality=high, seed=42, steps=40-60, cfg=6-8.
+```
+
 ## System Architecture
 
 ### 1) Layered architecture (end to end)
