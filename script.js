@@ -1,3 +1,63 @@
+<<<<<<< codex/build-futuristic-clearglassinc-website
+const counters = document.querySelectorAll('.counter');
+
+const animateCounter = (el) => {
+  const target = Number(el.dataset.target);
+  const duration = 1200;
+  const start = performance.now();
+
+  const step = (now) => {
+    const progress = Math.min((now - start) / duration, 1);
+    el.textContent = Math.floor(progress * target);
+    if (progress < 1) requestAnimationFrame(step);
+  };
+
+  requestAnimationFrame(step);
+};
+
+if (counters.length) {
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  counters.forEach((counter) => observer.observe(counter));
+}
+
+const yearEl = document.getElementById('year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+const canvas = document.getElementById('starfield');
+const ctx = canvas ? canvas.getContext('2d') : null;
+let stars = [];
+
+const resize = () => {
+  if (!canvas) return;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  stars = Array.from({ length: Math.min(180, Math.floor(window.innerWidth / 8)) }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.6,
+    v: 0.2 + Math.random() * 0.6,
+  }));
+};
+
+const render = () => {
+  if (!canvas || !ctx) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'rgba(86, 241, 255, 0.9)';
+
+  for (const s of stars) {
+    s.y += s.v;
+    if (s.y > canvas.height) {
+      s.y = -2;
+      s.x = Math.random() * canvas.width;
+=======
 // Global variables declaration
 var canvas; // Canvas element
 var ctx; // Canvas context
@@ -148,6 +208,7 @@ function monitorPerformance() {
 function animateNerveFibers() {
     if (!ctx || !canvas) {
         return;
+>>>>>>> main
     }
 
     // Track performance
@@ -268,6 +329,12 @@ document.addEventListener('DOMContentLoaded', function () {
 // Add resize event listener
 window.addEventListener('resize', handleResize);
 
+<<<<<<< codex/build-futuristic-clearglassinc-website
+window.addEventListener('resize', resize);
+if (canvas && ctx) {
+  resize();
+  render();
+=======
 // Register service worker for PWA functionality
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
@@ -275,4 +342,5 @@ if ('serviceWorker' in navigator) {
             logMessage('Service worker registration failed: ' + error.message);
         });
     });
+>>>>>>> main
 }
