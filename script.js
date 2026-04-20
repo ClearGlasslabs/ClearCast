@@ -14,24 +14,28 @@ const animateCounter = (el) => {
   requestAnimationFrame(step);
 };
 
-const observer = new IntersectionObserver((entries, obs) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      animateCounter(entry.target);
-      obs.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.4 });
+if (counters.length) {
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
 
-counters.forEach((counter) => observer.observe(counter));
+  counters.forEach((counter) => observer.observe(counter));
+}
 
-document.getElementById('year').textContent = new Date().getFullYear();
+const yearEl = document.getElementById('year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 const canvas = document.getElementById('starfield');
-const ctx = canvas.getContext('2d');
+const ctx = canvas ? canvas.getContext('2d') : null;
 let stars = [];
 
 const resize = () => {
+  if (!canvas) return;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   stars = Array.from({ length: Math.min(180, Math.floor(window.innerWidth / 8)) }, () => ({
@@ -43,6 +47,7 @@ const resize = () => {
 };
 
 const render = () => {
+  if (!canvas || !ctx) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = 'rgba(86, 241, 255, 0.9)';
 
@@ -61,5 +66,7 @@ const render = () => {
 };
 
 window.addEventListener('resize', resize);
-resize();
-render();
+if (canvas && ctx) {
+  resize();
+  render();
+}
