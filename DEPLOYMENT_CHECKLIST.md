@@ -18,8 +18,8 @@ Create/update the following records at your DNS provider:
 
 ```bash
 # DNS should resolve
-dig +short @1.1.1.1 clearglassinc.io A
-dig +short @1.1.1.1 www.clearglassinc.io CNAME
+nslookup clearglassinc.io
+nslookup www.clearglassinc.io
 
 # HTTP should redirect to HTTPS
 curl -I http://clearglassinc.io
@@ -28,11 +28,4 @@ curl -I http://www.clearglassinc.io
 # Canonical URL should be HTTPS apex
 curl -I https://www.clearglassinc.io
 curl -I https://clearglassinc.io
-```
-
-
-## One-command bash validation
-
-```bash
-./scripts/check_site.sh clearglassinc.io
 ```
