@@ -1,137 +1,165 @@
-# ClearGlassInc Artemis: Self-Evolving Intelligence Platform
-
-This document defines a production-grade, full-stack blueprint for **ClearGlassInc Artemis** on:
-- **Gotham** (operational intelligence + casework)
-- **Foundry** (data integration + ontology + operational logic)
-- **AIP** (copilots + agents + evals + orchestration)
-- **Apollo** (deployment, policy-controlled rollout, rollback, and runtime control)
-
----
-
-## Cinematic Product Render Prompt
-
-```text
-Prompt: Cinematic futuristic product render for ClearGlassInc Artemis: an intelligent transparent glass interface inside a luxury high-security enterprise command suite; adaptive electrochromic glass with dynamic opacity zones; floating holographic overlays with mission graph nodes, threat vectors, and AI copilots; ambient AI control surfaces and gesture-responsive UI; premium clean industrial architecture (brushed titanium, matte ceramic, smoked glass); ultra-realistic ray-traced materials, micro-scratches, physically accurate reflections/refractions, volumetric light shafts, global illumination, shallow depth of field; royal purple and white light accents, subtle bloom, high-contrast premium corporate aesthetic, next-generation transparent computing, photorealistic, highly detailed, 16:9, 8k.
-
-Negative prompt: cartoon, low-res, noisy, over-saturated neon chaos, text artifacts, distorted hands, warped perspective, clutter, watermark, logo artifacts.
-
-Suggested params (engine-agnostic): aspect_ratio=16:9, style=cinematic_photoreal, quality=high, seed=42, steps=40-60, cfg=6-8.
-```
+# ClearGlassInc Artemis — Self-Evolving AI Intelligence Platform Blueprint
 
 ## System Architecture
 
-### 1) Layered architecture (end to end)
+### 1) Mission Objectives and Operating Context
+
+**ClearGlassInc Artemis** is designed for coalition-aware, mission-critical intelligence operations where latency, provenance, and operator trust are first-class constraints.
+
+**Platform responsibilities by Palantir surface area:**
+- **Gotham:** investigations, case management, entity tracking, and operational decision support.
+- **Foundry:** multi-source data integration, ontology, transformations, and application data products.
+- **AIP:** copilots, agents, orchestration, model routing, and evaluation loops.
+- **Apollo:** secure deployment orchestration, progressive delivery, rollback, and runtime controls.
+
+### 2) End-to-End Layered Topology
 
 ```text
-┌─────────────────────────────────────────────────────────────────────┐
-│ FRONTEND LAYER                                                      │
-│  React/TypeScript Mission UI, Analyst Copilot, Commander Board      │
-└───────────────▲─────────────────────────────────────────────────────┘
-                │ HTTPS + mTLS + OIDC
-┌───────────────┴─────────────────────────────────────────────────────┐
-│ API GATEWAY + BFF                                                   │
-│  GraphQL/REST BFF, request shaping, policy context injection        │
-└───────────────▲─────────────────────────────────────────────────────┘
-                │ gRPC/HTTP + signed JWT claims
-┌───────────────┴─────────────────────────────────────────────────────┐
-│ BACKEND SERVICES                                                    │
-│  Case Service | Alert Service | Mission Service | Feedback Service  │
-│  Workflow Service (state machines) | Eval Service | Model Router    │
-└───────────────▲─────────────────────────────────────────────────────┘
-                │ events + query APIs
-┌───────────────┴─────────────────────────────────────────────────────┐
-│ STREAM + DATA LAYER                                                 │
-│  Kafka/PubSub, Foundry pipelines, lakehouse, search index, vectors  │
-└───────────────▲─────────────────────────────────────────────────────┘
-                │ ontology functions / object actions
-┌───────────────┴─────────────────────────────────────────────────────┐
-│ ONTOLOGY + AI ORCHESTRATION                                         │
-│  Foundry Ontology + AIP agents/coplots + eval harness + approvals   │
-└───────────────▲─────────────────────────────────────────────────────┘
-                │ deployment policies + releases
-┌───────────────┴─────────────────────────────────────────────────────┐
-│ DEPLOYMENT + SECURITY + OBSERVABILITY                               │
-│  Apollo rings, rollback, OPA policy-as-code, SIEM, traces, metrics  │
-└─────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────┐
+│ Web UI (Analyst + Commander + Supervisor Consoles)                      │
+│  React/TypeScript, graph UI, timeline, evidence panes, approval inbox   │
+└───────────────▲──────────────────────────────────────────────────────────┘
+                │ OIDC + mTLS + signed policy context
+┌───────────────┴──────────────────────────────────────────────────────────┐
+│ API Gateway / BFF                                                       │
+│  Request shaping, field-level filtering, policy context injection        │
+└───────────────▲──────────────────────────────────────────────────────────┘
+                │ gRPC / REST / GraphQL
+┌───────────────┴──────────────────────────────────────────────────────────┐
+│ Core Services                                                           │
+│  MissionSvc | AlertSvc | CaseSvc | RecommendationSvc | ApprovalSvc      │
+│  WorkflowSvc | FeedbackSvc | EvalSvc | ModelRouterSvc                   │
+└───────────────▲──────────────────────────────────────────────────────────┘
+                │ event sourcing + stream processing
+┌───────────────┴──────────────────────────────────────────────────────────┐
+│ Stream + Storage                                                        │
+│  Kafka/Pulsar, Foundry pipelines, Lakehouse, OLTP, Search, Vector DB   │
+└───────────────▲──────────────────────────────────────────────────────────┘
+                │ object/action contracts
+┌───────────────┴──────────────────────────────────────────────────────────┐
+│ Foundry Ontology + AIP Agents                                           │
+│  Ontology Objects/Links/Actions, tool policies, evaluation harness      │
+└───────────────▲──────────────────────────────────────────────────────────┘
+                │ signed releases + ring policies
+┌───────────────┴──────────────────────────────────────────────────────────┐
+│ Apollo + Governance + Observability                                     │
+│  Deployment rings, rollback, OPA policy-as-code, SIEM, trace+metrics    │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 2) Runtime control planes
+### 3) Frontend Blueprint (including your hero integration)
 
-1. **Mission Data Plane**: ingestion, entity fusion, alerting, case updates.
-2. **AI Decision Plane**: tool-using agents, model routing, uncertainty scoring.
-3. **Governance Plane**: policy checks, approvals, immutable audit.
-4. **Evolution Plane**: eval generation, A/B tests, prompt/workflow upgrade proposals.
+Use this hero block as a **mission status entry point** on the dashboard landing view:
 
-### 3) Core services
+```html
+<section class="hero-container">
+    <div class="overlay"></div>
+    <img src="assets/repo-banner.png" id="hero-img" alt="System Interface">
+    <div class="hero-text">
+        <h1 class="glitch">SYSTEM STATUS: ACTIVE</h1>
+        <p>Security Auditing | Thread Detection | Automation</p>
+    </div>
+</section>
+```
 
-- **Ingestion Orchestrator**: binds live feeds and historical backfill.
-- **Entity Resolution Service**: dedupe/link scoring with provenance.
-- **Alert Correlation Service**: joins events across domains and pushes prioritized triage queue.
-- **Mission Copilot Service**: analyst/commander copilots using AIP toolchains.
-- **Action Gate Service**: hard stop for operationally significant actions pending human approval.
-- **Self-Improvement Controller**: consumes feedback/outcomes and proposes safe upgrades.
+**UI composition for production:**
+- `HeroStatusPanel` (system mode, feeds health, runtime version).
+- `LiveThreatGrid` (triage queue with confidence bands).
+- `EvidenceGraph` (ontology-backed pivoting).
+- `ActionPackageDrawer` (recommended actions + policy/risk explanation).
+- `ApprovalInbox` (Approve/Reject with mandatory rationale for rejection).
+- `ModelOpsHUD` (latency, eval score deltas, drift indicators).
+
+### 4) Backend Service Decomposition
+
+- **Ingestion Service:** normalizes STIX/SIGINT/HUMINT/CYBER telemetry.
+- **Fusion Service:** entity resolution, deduplication, confidence aggregation.
+- **Correlation Service:** cross-domain alert joins and hypothesis generation.
+- **Recommendation Service:** AIP agent workflows + policy-constrained proposals.
+- **Approval Service:** dual-control workflow for critical actions.
+- **Feedback Service:** captures explicit/implicit operator feedback.
+- **Evolution Service:** turns outcomes into prompt/workflow/router candidates.
+
+### 5) Runtime Contracts
+
+- Every request carries: `subject`, `mission_context`, `classification`, `coalition_scope`, `purpose_of_use`.
+- Every recommendation returns: `evidence_ids`, `confidence`, `uncertainty_factors`, `required_approvals`.
+- Every state mutation writes immutable audit event with before/after snapshots.
 
 ---
 
 ## Data and Ontology
 
-### 1) Ontology primitives (Foundry)
+### 1) Canonical Ontology Objects
 
-#### Object Types
-- `EntityPerson`, `EntityOrganization`, `EntityAsset`, `EntityDevice`
-- `SignalEvent`, `CyberEvent`, `GeoTrack`, `Case`, `Alert`, `Mission`
-- `Recommendation`, `ActionPackage`, `Outcome`, `FeedbackRecord`
+```text
+EntityPerson, EntityOrg, EntityDevice, EntityAsset, EntityLocation
+SignalEvent, CyberEvent, GeoTrack, Alert, Case, Mission
+Hypothesis, Recommendation, ActionPackage, Outcome, FeedbackRecord
+PromptVersion, WorkflowVersion, RouterPolicyVersion, EvalRun
+```
 
-#### Link Types
-- `observed_in`, `owned_by`, `communicated_with`, `co_located_with`
-- `supports_hypothesis`, `contradicts_hypothesis`, `derived_from`
-- `recommended_for`, `approved_by`, `executed_as`
+### 2) Relationship Semantics
 
-#### Action Types
-- `open_case`, `escalate_alert`, `request_collection`, `publish_brief`
-- `propose_prompt_upgrade`, `promote_workflow_version`, `rollback_version`
+```text
+observed_in, attributed_to, co_located_with, communicated_with
+supports_hypothesis, contradicts_hypothesis, derived_from
+recommended_for, approved_by, rejected_by, executed_as
+produced_by_prompt, produced_by_workflow, routed_by_policy
+```
 
-### 2) Entity schema (representative)
+### 3) Temporal + Confidence + Lineage Model
+
+Each assertion is modeled with:
+- `confidence_score` (0.0–1.0)
+- `confidence_type` (`model`, `rule`, `human_verified`, `hybrid`)
+- `valid_start`, `valid_end`
+- `event_time`, `ingest_time`
+- `lineage`: pipeline id, dataset snapshot id, model id, prompt id, workflow id
+- `classification` + `coalition_scope` + `need_to_know_tags`
+
+### 4) SQL Schema Skeleton
 
 ```sql
-CREATE TABLE ontology_alert (
-  alert_id                TEXT PRIMARY KEY,
-  mission_id              TEXT NOT NULL,
-  severity                TEXT NOT NULL,
-  confidence              DOUBLE PRECISION NOT NULL,
-  status                  TEXT NOT NULL,           -- NEW, TRIAGED, APPROVED, CLOSED
-  event_time              TIMESTAMP NOT NULL,
-  ingest_time             TIMESTAMP NOT NULL,
-  lineage_ref             TEXT NOT NULL,
-  classification          TEXT NOT NULL,
-  coalition_scope         TEXT NOT NULL,
-  created_by_agent        TEXT,
-  created_by_user         TEXT,
-  version                 INTEGER NOT NULL DEFAULT 1
+CREATE TABLE artemis_alert (
+  alert_id                  TEXT PRIMARY KEY,
+  mission_id                TEXT NOT NULL,
+  title                     TEXT NOT NULL,
+  severity                  TEXT NOT NULL,
+  confidence_score          DOUBLE PRECISION NOT NULL,
+  status                    TEXT NOT NULL,
+  classification            TEXT NOT NULL,
+  coalition_scope           TEXT NOT NULL,
+  valid_start               TIMESTAMP NOT NULL,
+  valid_end                 TIMESTAMP,
+  event_time                TIMESTAMP NOT NULL,
+  ingest_time               TIMESTAMP NOT NULL,
+  lineage_pipeline_run_id   TEXT NOT NULL,
+  lineage_prompt_version    TEXT,
+  lineage_workflow_version  TEXT,
+  lineage_router_policy     TEXT,
+  created_by                TEXT NOT NULL,
+  created_at                TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE artemis_feedback (
+  feedback_id               TEXT PRIMARY KEY,
+  mission_id                TEXT NOT NULL,
+  target_type               TEXT NOT NULL, -- recommendation|summary|classification
+  target_id                 TEXT NOT NULL,
+  actor_id                  TEXT NOT NULL,
+  label                     TEXT NOT NULL, -- correct|incorrect|partial|unsafe
+  correction_payload        JSONB,
+  trust_score_delta         DOUBLE PRECISION,
+  created_at                TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
-### 3) Confidence + temporal + lineage
+### 5) Ontology-Driven Operations
 
-- Every assertion carries:
-  - `confidence` (0..1)
-  - `confidence_method` (`heuristic`, `model_eval`, `human_validated`)
-  - `valid_time_start/end`
-  - `lineage_ref` (pipeline run id + model/prompt versions)
-- Non-destructive updates: new versions append; previous state remains queryable.
-
-### 4) Permissions as ontology attributes
-
-- `classification` (e.g., SECRET, CONFIDENTIAL)
-- `need_to_know_tags` (mission compartments)
-- `coalition_scope` (e.g., US_ONLY, FIVE_EYES)
-- `entity_acl` for row/entity-level policy binding.
-
-### 5) How ontology drives human + AI behavior
-
-- Analysts interact through cases/alerts/graph pivots.
-- Agents consume the same object graph and are restricted by identical policy filters.
-- Recommendations must reference ontology object IDs and supporting evidence links.
+- UI graph pivots are ontology traversals with policy filters baked in.
+- AIP tools query ontology objects, never raw unrestricted tables.
+- Agent outputs must cite ontology object IDs and lineage metadata.
 
 ---
 
@@ -139,300 +167,317 @@ CREATE TABLE ontology_alert (
 
 ### 1) Copilots
 
-1. **Analyst Copilot**
-   - Summarizes deltas, hypotheses, contradictory evidence.
-   - Drafts case notes and collection requests.
-2. **Commander Copilot**
-   - Highlights mission risk changes, deadlines, likely impacts.
-   - Produces COA (course of action) options with uncertainty.
+- **Analyst Copilot:** summarization, contradiction highlighting, evidence request drafting.
+- **Commander Copilot:** mission risk evolution, COA comparisons, confidence-aware recommendations.
+- **Supervisor Copilot:** model/workflow performance oversight and promotion review support.
 
-### 2) Multi-agent workflow
+### 2) Multi-Agent Workflow Graph
 
-- **Triage Agent**: classify incoming event priority.
-- **Enrichment Agent**: fetch related entities/intel context.
-- **Correlation Agent**: build cross-domain evidence graph.
-- **Recommendation Agent**: generate operational options.
-- **Compliance Agent**: run policy checks before action proposal.
-
-### 3) Tool-using agent interface
-
-```python
-from pydantic import BaseModel
-from typing import List
-
-class ToolCall(BaseModel):
-    tool: str
-    args: dict
-
-class AgentRecommendation(BaseModel):
-    recommendation_id: str
-    action_type: str
-    rationale: str
-    confidence: float
-    evidence_object_ids: List[str]
-    requires_human_approval: bool = True
-
-
-def run_recommendation_cycle(query: str, tools) -> AgentRecommendation:
-    # 1) retrieve
-    context = tools.query_ontology({"query": query, "max_hops": 2})
-    # 2) reason
-    ranked = tools.rank_hypotheses(context)
-    # 3) policy pre-check
-    tools.policy_check({"operation": "propose_action", "context": ranked})
-    # 4) propose (not execute)
-    return AgentRecommendation(
-        recommendation_id=tools.uuid(),
-        action_type="request_collection",
-        rationale="Cross-domain signal convergence detected near protected asset.",
-        confidence=0.86,
-        evidence_object_ids=ranked["top_evidence_ids"],
-    )
+```text
+[Ingest Event]
+   -> TriageAgent
+   -> EnrichmentAgent
+   -> CorrelationAgent
+   -> RecommendationAgent
+   -> ComplianceAgent
+   -> ApprovalGate
+   -> ExecutionOrchestrator
+   -> OutcomeCapture
 ```
 
-### 4) Approval gates for significant actions
+### 3) Tooling Contracts for Agents (Python)
 
-Operationally significant actions **cannot** auto-execute:
-- kinetic-adjacent decisions
-- external partner notifications
-- case closure with legal consequence
-- policy/prompt/model promotions
+```python
+from pydantic import BaseModel, Field
+from typing import Literal
 
-All pass through a two-step workflow: `Propose -> Human Approve/Reject -> Execute/Abort`.
+class PolicyContext(BaseModel):
+    user_id: str
+    mission_id: str
+    classification: str
+    coalition_scope: str
+    purpose_of_use: str
+
+class Recommendation(BaseModel):
+    recommendation_id: str
+    mission_id: str
+    action_type: Literal["open_case", "request_collection", "escalate_alert", "publish_brief"]
+    rationale: str
+    confidence: float = Field(ge=0.0, le=1.0)
+    evidence_ids: list[str]
+    requires_human_approval: bool
+
+class Tooling:
+    def query_ontology(self, object_type: str, filters: dict, policy: PolicyContext) -> list[dict]: ...
+    def score_hypotheses(self, mission_id: str, candidates: list[dict]) -> list[dict]: ...
+    def policy_check(self, operation: str, payload: dict, policy: PolicyContext) -> dict: ...
+    def persist_recommendation(self, rec: Recommendation) -> None: ...
+
+
+def propose_action(tooling: Tooling, policy: PolicyContext, event_id: str) -> Recommendation:
+    context = tooling.query_ontology(
+        object_type="SignalEvent",
+        filters={"event_id": event_id, "max_hops": 2},
+        policy=policy,
+    )
+    ranked = tooling.score_hypotheses(policy.mission_id, context)
+
+    payload = {
+        "action_type": "request_collection",
+        "evidence_ids": [x["object_id"] for x in ranked[:5]],
+        "confidence": ranked[0]["score"] if ranked else 0.35,
+    }
+    tooling.policy_check("propose_action", payload, policy)
+
+    rec = Recommendation(
+        recommendation_id=f"rec-{event_id}",
+        mission_id=policy.mission_id,
+        action_type="request_collection",
+        rationale="Cross-domain convergence with unresolved contradiction; request targeted collection.",
+        confidence=min(0.95, payload["confidence"]),
+        evidence_ids=payload["evidence_ids"],
+        requires_human_approval=True,
+    )
+    tooling.persist_recommendation(rec)
+    return rec
+```
+
+### 4) Approval Gates
+
+Operationally significant operations are hard-gated:
+- mission escalation outside current compartment,
+- external coalition notification,
+- legal-sensitive case closure,
+- prompt/workflow/router promotion.
+
+Gate states: `PROPOSED -> REVIEW_PENDING -> APPROVED|REJECTED -> EXECUTED|ABORTED`.
 
 ---
 
 ## Self-Improvement Loop
 
-### 1) Signal capture
+### 1) Signal Capture Fabric
 
-Collect continuously:
-- operator edits and overrides
-- accepted/rejected recommendations
-- false-positive/false-negative labels
-- mission outcomes (impact, timeliness)
-- latency + reliability traces
-- user trust feedback (explicit rating + implicit behavior)
+Capture all of the following as first-class events:
+- operator edits (what changed + why),
+- recommendation accept/reject,
+- false positives/false negatives,
+- mission outcomes (impact, speed, correctness),
+- query logs, tool usage traces, latency,
+- explicit trust ratings and implicit trust proxies (override frequency).
 
-### 2) Evolution pipeline
+### 2) Evolution Pipeline
 
 ```text
 Feedback + Outcomes
-   -> Featureization (label quality checks)
-   -> Eval Dataset Builder (golden + shadow sets)
-   -> Candidate Generator (prompt/workflow/router proposals)
-   -> Offline Eval Harness (precision/recall/latency/safety)
-   -> Human Review Board
-   -> Controlled Rollout (Apollo canary ring)
-   -> Live A/B + drift monitor
-   -> Promote or rollback
+  -> Label Quality Validator
+  -> Eval Dataset Builder (golden/shadow/challenge)
+  -> Candidate Generator
+      - Prompt candidate
+      - Workflow graph candidate
+      - Model route policy candidate
+  -> Offline Eval Harness
+  -> Safety + Policy Gate
+  -> Human Review Board
+  -> Apollo Canary (Ring 1)
+  -> Live A/B + Drift Monitor
+  -> Promote or Rollback
 ```
 
-### 3) Versioning + rollback
+### 3) Safe Optimization Lifecycle
 
-- Version every mutable artifact:
-  - `prompt_version`
-  - `workflow_graph_version`
-  - `routing_policy_version`
-  - `tool_contract_version`
-- Apollo deployment rings:
-  - Ring 0 (sandbox)
-  - Ring 1 (shadow)
-  - Ring 2 (pilot analysts)
-  - Ring 3 (full mission)
-- Any regression beyond guardrails auto-triggers rollback.
+1. **Draft candidate** from objective deltas (precision drop, latency breach, low trust).
+2. **Run offline evals** against frozen datasets.
+3. **Run policy checks** (unsafe outputs, over-classification leaks, explanation quality).
+4. **Human approval required** for promotion.
+5. **Canary release via Apollo** to bounded user cohort.
+6. **Auto rollback** on guardrail breach.
 
-### 4) Drift detection
+### 4) Metrics and Guardrails
 
-- **Data drift**: feature/label distribution shift.
-- **Behavior drift**: rising override rate, lower trust score.
-- **Policy drift**: increase in near-violations caught by compliance agent.
+- **Quality:** precision, recall, F1, contradiction resolution rate.
+- **Runtime:** p50/p95 latency, cost per mission action.
+- **Human trust:** override rate, acceptance rate, review dwell time.
+- **Mission impact:** time-to-triage, time-to-action, outcome success rate.
+- **Safety:** policy-violation rate, sensitive data exposure incidence.
 
-### 5) Safety guarantees (hard constraints)
+### 5) Drift Detection
 
-- No autonomous goal mutation.
-- No direct prompt/model promotion without human approval.
-- No operational action execution without approval when marked critical.
-- Immutable audit records for every proposal and decision.
+```python
+from dataclasses import dataclass
+
+@dataclass
+class DriftSnapshot:
+    data_psi: float
+    override_rate: float
+    precision_7d: float
+    precision_30d: float
+
+
+def should_freeze_promotions(s: DriftSnapshot) -> bool:
+    precision_drop = s.precision_30d - s.precision_7d
+    return (
+        s.data_psi > 0.20
+        or s.override_rate > 0.35
+        or precision_drop > 0.08
+    )
+```
 
 ---
 
 ## Full-Stack Implementation
 
-### 1) Frontend (React + TypeScript)
+### 1) API Gateway + Backend Example (FastAPI)
 
-- Mission map + timeline + graph exploration.
-- Split-pane case workspace (evidence, chat, action package).
-- Recommendation review panel with explainability and policy check status.
-- Feedback widget: “useful?”, “correct?”, “what changed?”.
+```python
+from fastapi import FastAPI, Depends, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI(title="ClearGlassInc Artemis API")
+
+class RecommendRequest(BaseModel):
+    mission_id: str
+    event_id: str
+
+class Principal(BaseModel):
+    user_id: str
+    roles: list[str]
+    classification: str
+    coalition_scope: str
+
+
+def authn_authz() -> Principal:
+    # Replace with OIDC validation + policy binding.
+    return Principal(
+        user_id="analyst-42",
+        roles=["analyst"],
+        classification="SECRET",
+        coalition_scope="FVEY",
+    )
+
+
+@app.post("/v1/recommend")
+def recommend(req: RecommendRequest, principal: Principal = Depends(authn_authz)):
+    if principal.classification not in {"SECRET", "TOP_SECRET"}:
+        raise HTTPException(status_code=403, detail="Insufficient classification")
+
+    # Model/router/workflow invocation placeholder.
+    return {
+        "mission_id": req.mission_id,
+        "event_id": req.event_id,
+        "recommendation": "request_collection",
+        "confidence": 0.87,
+        "requires_human_approval": True,
+    }
+```
+
+### 1.1) Frontend BFF Client + Approval Action (TypeScript)
 
 ```ts
-// ui/src/api/recommendations.ts
-export async function approveRecommendation(id: string, reviewerNote: string) {
-  const res = await fetch(`/api/recommendations/${id}/approve`, {
+type RecommendRequest = {
+  missionId: string;
+  eventId: string;
+};
+
+type RecommendationResponse = {
+  mission_id: string;
+  event_id: string;
+  recommendation: "request_collection" | "open_case" | "escalate_alert" | "publish_brief";
+  confidence: number;
+  requires_human_approval: boolean;
+};
+
+export async function requestRecommendation(
+  req: RecommendRequest,
+  token: string,
+): Promise<RecommendationResponse> {
+  const response = await fetch("/api/v1/recommend", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ reviewerNote })
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      "x-purpose-of-use": "mission-triage",
+    },
+    body: JSON.stringify({ mission_id: req.missionId, event_id: req.eventId }),
   });
-  if (!res.ok) throw new Error(`Approval failed: ${res.status}`);
-  return res.json();
+
+  if (!response.ok) {
+    throw new Error(`recommendation request failed: ${response.status}`);
+  }
+  return response.json() as Promise<RecommendationResponse>;
+}
+
+export async function submitApprovalDecision(
+  actionPackageId: string,
+  decision: "APPROVE" | "REJECT",
+  rationale: string,
+  token: string,
+): Promise<void> {
+  const response = await fetch(`/api/v1/approval/${actionPackageId}/decision`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ decision, rationale }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`approval decision failed: ${response.status}`);
+  }
 }
 ```
 
-### 2) API gateway + backend (Python/FastAPI)
+### 2) Stream Processor Example (Python)
 
 ```python
-# services/action_gate/main.py
-from fastapi import FastAPI, HTTPException, Depends
-from pydantic import BaseModel
+from typing import TypedDict
 
-app = FastAPI()
-
-class ApprovalRequest(BaseModel):
-    reviewer_id: str
-    reviewer_note: str
+class Event(TypedDict):
+    event_id: str
+    mission_id: str
+    source: str
+    payload: dict
 
 
-def policy_context(user_id: str):
-    # inject claims from IAM + mission context
-    return {"user_id": user_id, "clearance": "SECRET", "scopes": ["mission:approve"]}
-
-
-@app.post("/recommendations/{rec_id}/approve")
-def approve(rec_id: str, req: ApprovalRequest):
-    ctx = policy_context(req.reviewer_id)
-    if "mission:approve" not in ctx["scopes"]:
-        raise HTTPException(status_code=403, detail="Not authorized")
-
-    # write immutable decision record then queue execution
-    decision = {
-        "rec_id": rec_id,
-        "decision": "APPROVED",
-        "reviewer": req.reviewer_id,
-        "note": req.reviewer_note,
+def handle_event(evt: Event, publish):
+    normalized = {
+        "event_id": evt["event_id"],
+        "mission_id": evt["mission_id"],
+        "source": evt["source"],
+        "signal": evt["payload"],
     }
-    # event bus publish omitted
-    return {"ok": True, "decision": decision}
+    publish("artemis.normalized.events", normalized)
 ```
 
-### 3) Event bus + streaming
+### 3) Workflow State Machine (Python)
 
 ```python
-# services/triage/consumer.py
-from confluent_kafka import Consumer
-import json
-
-consumer = Consumer({
-    "bootstrap.servers": "kafka:9092",
-    "group.id": "triage-agent",
-    "auto.offset.reset": "earliest",
-})
-consumer.subscribe(["raw.events"])
-
-while True:
-    msg = consumer.poll(1.0)
-    if msg is None:
-        continue
-    event = json.loads(msg.value())
-    # score + emit
-    # produce to correlated.alerts topic
-```
-
-### 4) Search/retrieval + model router
-
-```python
-# services/model_router/router.py
 from enum import Enum
 
-class Tier(str, Enum):
-    LOW_LATENCY = "low_latency"
-    HIGH_REASONING = "high_reasoning"
+class ApprovalState(str, Enum):
+    PROPOSED = "PROPOSED"
+    REVIEW_PENDING = "REVIEW_PENDING"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
+    EXECUTED = "EXECUTED"
+    ABORTED = "ABORTED"
+
+ALLOWED_TRANSITIONS = {
+    ApprovalState.PROPOSED: {ApprovalState.REVIEW_PENDING},
+    ApprovalState.REVIEW_PENDING: {ApprovalState.APPROVED, ApprovalState.REJECTED},
+    ApprovalState.APPROVED: {ApprovalState.EXECUTED},
+    ApprovalState.REJECTED: {ApprovalState.ABORTED},
+}
 
 
-def choose_model(task: str, classification: str, latency_ms: int):
-    if classification in {"SECRET", "TOP_SECRET"}:
-        return "onprem-llm-secure-v3"
-    if latency_ms < 800:
-        return "fast-llm-v2"
-    return "reasoner-llm-v5"
+def transition(current: ApprovalState, nxt: ApprovalState) -> ApprovalState:
+    if nxt not in ALLOWED_TRANSITIONS.get(current, set()):
+        raise ValueError(f"Invalid transition {current} -> {nxt}")
+    return nxt
 ```
 
-### 5) Eval pipeline (Python + SQL)
-
-```python
-# services/evals/run_eval.py
-from dataclasses import dataclass
-
-@dataclass
-class EvalResult:
-    candidate_version: str
-    precision: float
-    recall: float
-    latency_p95_ms: float
-    policy_violations: int
-
-
-def gate(result: EvalResult) -> bool:
-    return (
-        result.precision >= 0.90 and
-        result.recall >= 0.85 and
-        result.latency_p95_ms <= 1500 and
-        result.policy_violations == 0
-    )
-```
-
-```sql
--- evals/store_results.sql
-INSERT INTO eval_results(
-  candidate_version, precision, recall, latency_p95_ms, policy_violations, created_at
-) VALUES (:candidate_version, :precision, :recall, :latency_p95_ms, :policy_violations, NOW());
-```
-
-### 6) Workflow state machine
-
-```python
-# services/workflows/state_machine.py
-from transitions import Machine
-
-states = [
-    "NEW", "TRIAGED", "RECOMMENDED", "PENDING_APPROVAL",
-    "APPROVED", "EXECUTED", "REJECTED", "ROLLED_BACK"
-]
-
-transitions = [
-    {"trigger": "triage", "source": "NEW", "dest": "TRIAGED"},
-    {"trigger": "recommend", "source": "TRIAGED", "dest": "RECOMMENDED"},
-    {"trigger": "submit", "source": "RECOMMENDED", "dest": "PENDING_APPROVAL"},
-    {"trigger": "approve", "source": "PENDING_APPROVAL", "dest": "APPROVED"},
-    {"trigger": "execute", "source": "APPROVED", "dest": "EXECUTED"},
-    {"trigger": "reject", "source": "PENDING_APPROVAL", "dest": "REJECTED"},
-]
-
-class ActionWorkflow:
-    pass
-
-workflow = ActionWorkflow()
-Machine(model=workflow, states=states, transitions=transitions, initial="NEW")
-```
-
----
-
-## Security and Governance
-
-### 1) Zero-trust + need-to-know
-
-- mTLS service identity for every hop.
-- OIDC tokens with short TTL and audience restrictions.
-- ABAC/RBAC merged policy decisions using mission context.
-- Row/column/entity-level filters enforced before retrieval and before generation.
-
-### 2) Coalition-aware compartmentalization
-
-- Every object tagged with coalition boundary.
-- Cross-boundary joins require explicit policy grants.
-- Agent retrieval tool automatically rewrites query predicates to include coalition tags.
-
-### 3) Policy-as-code (OPA style)
+### 4) Policy-as-Code Sketch (Rego)
 
 ```rego
 package artemis.authz
@@ -440,145 +485,198 @@ package artemis.authz
 default allow = false
 
 allow {
-  input.user.clearance == "SECRET"
-  input.action == "approve_recommendation"
-  input.user.scopes[_] == "mission:approve"
-  input.object.classification != "TOP_SECRET"
+  input.operation == "recommendation.read"
+  input.subject.clearance in ["SECRET", "TOP_SECRET"]
+  input.resource.classification == input.subject.clearance
+  input.resource.coalition_scope == input.subject.coalition_scope
+}
+
+allow {
+  input.operation == "action.execute"
+  input.resource.requires_human_approval == true
+  input.resource.approval_state == "APPROVED"
 }
 ```
 
-### 4) Model/prompt governance
-
-- Prompt registry with signed versions.
-- Mandatory eval report attached to promotion request.
-- Human approval from AI governance role required.
-- Full rollback path retained for each promoted version.
-
-### 5) Immutable provenance
-
-- Append-only decision/event log.
-- Hash-chained records for tamper evidence.
-- Audit query API for legal/compliance and after-action review.
-
----
-
-## Code Examples (Integrated Patterns)
-
-### 1) Ontology-driven query + policy guard
+### 5) Eval Harness Pipeline (Python)
 
 ```python
-# services/query/ontology_query.py
-def query_alert_context(alert_id: str, user_ctx: dict, ontology_client, policy_client):
-    decision = policy_client.check({
-        "action": "read_alert_context",
-        "user": user_ctx,
-        "resource": {"type": "Alert", "id": alert_id}
-    })
-    if not decision["allow"]:
-        raise PermissionError("Access denied")
+from statistics import mean
 
-    return ontology_client.query(
-        """
-        MATCH (a:Alert {id: $alert_id})-[:derived_from]->(e)
-        OPTIONAL MATCH (e)-[:related_to]->(x)
-        RETURN a, collect(e) as evidence, collect(x) as neighbors
-        """,
-        {"alert_id": alert_id}
-    )
-```
 
-### 2) Feedback capture endpoint
+def evaluate(run_id: str, predictions: list[int], labels: list[int], latencies_ms: list[float]) -> dict:
+    tp = sum(1 for p, y in zip(predictions, labels) if p == 1 and y == 1)
+    fp = sum(1 for p, y in zip(predictions, labels) if p == 1 and y == 0)
+    fn = sum(1 for p, y in zip(predictions, labels) if p == 0 and y == 1)
 
-```python
-# services/feedback/main.py
-from fastapi import FastAPI
-from pydantic import BaseModel
+    precision = tp / (tp + fp) if (tp + fp) else 0.0
+    recall = tp / (tp + fn) if (tp + fn) else 0.0
+    p95_latency = sorted(latencies_ms)[int(0.95 * (len(latencies_ms) - 1))]
 
-app = FastAPI()
-
-class Feedback(BaseModel):
-    recommendation_id: str
-    rating: int            # 1..5
-    corrected_label: str | None = None
-    comment: str | None = None
-
-@app.post("/feedback")
-def capture_feedback(f: Feedback):
-    # store to warehouse + publish feedback event
-    return {"ok": True, "stored": f.recommendation_id}
-```
-
-### 3) Upgrade proposal generator
-
-```python
-# services/evolution/propose.py
-def propose_upgrade(eval_summary, current_versions):
-    if eval_summary["precision_delta"] < 0.02:
-        return {"propose": False, "reason": "Insufficient gain"}
     return {
-        "propose": True,
-        "type": "prompt_upgrade",
-        "from": current_versions["prompt"],
-        "to": eval_summary["candidate_prompt_version"],
-        "risk": "low",
-        "requires_approval": True,
+        "run_id": run_id,
+        "precision": round(precision, 4),
+        "recall": round(recall, 4),
+        "latency_p95_ms": round(p95_latency, 2),
+        "mean_latency_ms": round(mean(latencies_ms), 2),
     }
 ```
 
 ---
 
-## Scenario Walkthrough (Cinematic + Technical)
+## Security and Governance
 
-### Situation
-At **09:12:03 UTC**, a high-velocity cyber event enters Artemis: anomalous beaconing from a device linked to a protected logistics node.
+### 1) Zero-Trust and Need-to-Know
 
-### Step-by-step
+- Identity-backed mTLS service-to-service auth.
+- OIDC/JWT for user sessions with short-lived tokens.
+- Mandatory `purpose_of_use` claims.
+- Compartment and coalition-bound attribute-based access controls.
 
-1. **Ingest + fuse**
-   - Stream event lands in `raw.events`.
-   - Pipeline enriches with asset owner, prior incident history, geo context.
-   - Ontology objects `CyberEvent`, `EntityDevice`, `EntityOrganization` linked.
+### 2) Multi-Level Policy Enforcement
 
-2. **Agentic triage**
-   - Triage Agent scores severity `0.91` and confidence `0.84`.
-   - Correlation Agent finds matching comms anomalies and access pattern deviations.
-   - Recommendation Agent drafts: `request_collection` + `isolate_segment` (proposed only).
+- **Row-level:** mission/compartment filters.
+- **Column-level:** redact sensitive fields unless explicitly entitled.
+- **Entity-level:** ontology ACLs for object visibility.
+- **Action-level:** explicit approval requirements for critical operations.
 
-3. **Human approval gate**
-   - Analyst sees evidence graph + rationale + uncertainty.
-   - Analyst approves `request_collection` and rejects `isolate_segment` with note: “Need commander confirmation.”
+### 3) Governance Objects
 
-4. **Execution + audit**
-   - Approved action executed by workflow service.
-   - Decision and execution hashes written to immutable audit ledger.
+- Prompt registry with ownership, risk rating, approvals.
+- Model registry with test artifacts and drift baselines.
+- Workflow registry with graph versioning and release notes.
+- Immutable audit log with cryptographic hash chaining.
 
-5. **Outcome capture**
-   - 40 minutes later, mission result marks recommendation as partially effective.
-   - Operator edits rationale text and labels one false correlation edge.
+### 4) Immutable Audit Event Example
 
-6. **Self-improvement loop**
-   - Feedback enters eval builder.
-   - Candidate prompt/workflow patch generated to reduce that false-correlation pattern.
-   - Offline eval passes thresholds; human governance approves pilot rollout.
-   - Apollo canary deploys to Ring 2.
-   - After stable metrics (precision up +3.2%, no policy violations), promotion to Ring 3.
+```json
+{
+  "event_type": "PROMPT_PROMOTION_REQUESTED",
+  "event_id": "aud-2026-04-21-000123",
+  "actor_id": "supervisor-7",
+  "target": "prompt:v34",
+  "justification": "+4.2% precision, -12% overrides in canary",
+  "policy_decision": "REVIEW_PENDING",
+  "timestamp": "2026-04-21T10:18:44Z",
+  "hash_prev": "6c71...",
+  "hash_self": "a22f..."
+}
+```
 
-### Why this is safely self-improving
+### 6) SQL Eval Materialization for Promotion Decisions
 
-- System adapts **behavioral policy and reasoning prompts**, not mission goals.
-- Every mutation is versioned, tested, approved, and reversible.
-- Human authority remains mandatory for consequential actions.
+```sql
+CREATE MATERIALIZED VIEW artemis_eval_promotion_guardrail AS
+SELECT
+  candidate_version,
+  AVG(precision)                       AS precision_avg,
+  AVG(recall)                          AS recall_avg,
+  PERCENTILE_CONT(0.95) WITHIN GROUP (
+    ORDER BY latency_p95_ms
+  )                                    AS p95_latency_ms,
+  AVG(policy_violation_rate)           AS policy_violation_rate_avg,
+  AVG(operator_override_rate)          AS operator_override_rate_avg
+FROM artemis_eval_results
+WHERE run_ts >= NOW() - INTERVAL '14 days'
+GROUP BY candidate_version;
+```
 
 ---
 
-## Production KPIs
+## Code Examples
 
-- Detection precision / recall by mission profile
-- Time-to-triage (p50/p95)
-- Recommendation acceptance rate
-- Override rate (lower is better, with context)
-- Policy violation count (target: zero)
-- Mission outcome lift attributable to Artemis recommendations
-- Deployment rollback rate and mean recovery time
+### 1) Event-to-Case Promotion Handler (Python)
 
-This blueprint gives **ClearGlassInc Artemis** a machine-speed operational intelligence stack that is agentic, audited, coalition-aware, and continuously improving under strict human-governed guardrails.
+```python
+def promote_alert_to_case(alert: dict, policy_check, create_case):
+    decision = policy_check(
+        operation="case.create",
+        resource={
+            "classification": alert["classification"],
+            "coalition_scope": alert["coalition_scope"],
+            "confidence": alert["confidence_score"],
+        },
+    )
+    if not decision.get("allow"):
+        return {"status": "blocked", "reason": decision.get("reason", "policy")}
+
+    case_id = create_case(
+        mission_id=alert["mission_id"],
+        title=f"Case from alert {alert['alert_id']}",
+        seed_evidence=[alert["alert_id"]],
+    )
+    return {"status": "created", "case_id": case_id}
+```
+
+### 2) Prompt Candidate Generator (Python)
+
+```python
+def generate_prompt_candidate(baseline_prompt: str, error_patterns: list[str]) -> str:
+    additions = []
+    if "missed_contradiction" in error_patterns:
+        additions.append("Always include contradictory evidence section before recommendations.")
+    if "over_confident_language" in error_patterns:
+        additions.append("Use uncertainty-calibrated wording when confidence < 0.75.")
+    if "policy_omission" in error_patterns:
+        additions.append("Explicitly list policy constraints and approval requirements.")
+
+    return baseline_prompt + "\n\n# Candidate Constraints\n" + "\n".join(f"- {x}" for x in additions)
+```
+
+### 3) Router Policy Candidate (Python)
+
+```python
+def route_model(task: str, risk_level: str) -> str:
+    if risk_level == "high":
+        return "model-secure-high-precision"
+    if task in {"summarization", "translation"}:
+        return "model-fast-low-cost"
+    return "model-balanced"
+```
+
+---
+
+## Scenario Walkthrough
+
+### Live Event to Learning Loop (Cinematic but technically grounded)
+
+1. **00:00 — Event Ingested**
+   - A cyber telemetry spike and anomalous access event enter Foundry ingestion pipeline.
+   - Ingestion Service normalizes records and emits `SignalEvent` objects.
+
+2. **00:01 — Ontology Fusion + Triage**
+   - Fusion links event to known `EntityDevice`, `EntityPerson`, and mission-critical `EntityAsset`.
+   - Triage Agent assigns severity `HIGH`, confidence `0.81`, creates `Alert`.
+
+3. **00:02 — Multi-Agent Correlation**
+   - Enrichment Agent pulls prior incidents and geo-temporal overlaps.
+   - Correlation Agent finds matching pattern across two coalition domains.
+   - Recommendation Agent proposes: `request_collection + temporary access quarantine`.
+
+4. **00:03 — Policy + Approval Gate**
+   - Compliance Agent verifies proposal is in-policy but marked critical.
+   - Approval Service creates `ActionPackage` with required commander approval.
+   - Operator receives rationale, evidence graph, uncertainty notes.
+
+5. **00:04 — Human Decision**
+   - Commander approves collection request, rejects quarantine (insufficient confidence).
+   - Rejection reason captured as structured feedback: `action_too_disruptive`.
+
+6. **00:10 — Outcome Capture**
+   - Additional collection confirms benign misconfiguration; no adversarial persistence.
+   - Outcome recorded: recommendation partially correct; quarantine rejection was appropriate.
+
+7. **End of Day — Self-Improvement Cycle**
+   - Feedback Service aggregates similar rejects with same reason code.
+   - Evolution Service proposes prompt/workflow change:
+     - require stronger threshold before recommending quarantine.
+     - enforce explicit disruption-cost estimate section.
+   - Offline eval shows: precision +3.1%, false disruption recommendations -18%.
+   - Supervisor approves canary in Apollo Ring 1.
+
+8. **+48 Hours — Promotion or Rollback**
+   - Canary metrics remain within guardrails (latency stable, trust improved, no policy regressions).
+   - Apollo promotes to Ring 2 and Ring 3.
+   - If regressions appear, auto rollback executes with full audit trace.
+
+This is how **ClearGlassInc Artemis** gets smarter continuously while remaining human-governed, policy-constrained, and mission-safe.
