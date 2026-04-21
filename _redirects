@@ -1,0 +1,9 @@
+# Force HTTPS for all routes
+http://clearglassinc.io/* https://clearglassinc.io/:splat 301!
+http://www.clearglassinc.io/* https://clearglassinc.io/:splat 301!
+
+# Canonical host: redirect www -> apex
+https://www.clearglassinc.io/* https://clearglassinc.io/:splat 301!
+
+# SPA fallback (keep client-side routes working)
+/* /index.html 200
