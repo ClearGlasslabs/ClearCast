@@ -371,6 +371,63 @@ def recommend(req: RecommendRequest, principal: Principal = Depends(authn_authz)
     }
 ```
 
+### 1.1) Frontend BFF Client + Approval Action (TypeScript)
+
+```ts
+type RecommendRequest = {
+  missionId: string;
+  eventId: string;
+};
+
+type RecommendationResponse = {
+  mission_id: string;
+  event_id: string;
+  recommendation: "request_collection" | "open_case" | "escalate_alert" | "publish_brief";
+  confidence: number;
+  requires_human_approval: boolean;
+};
+
+export async function requestRecommendation(
+  req: RecommendRequest,
+  token: string,
+): Promise<RecommendationResponse> {
+  const response = await fetch("/api/v1/recommend", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      "x-purpose-of-use": "mission-triage",
+    },
+    body: JSON.stringify({ mission_id: req.missionId, event_id: req.eventId }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`recommendation request failed: ${response.status}`);
+  }
+  return response.json() as Promise<RecommendationResponse>;
+}
+
+export async function submitApprovalDecision(
+  actionPackageId: string,
+  decision: "APPROVE" | "REJECT",
+  rationale: string,
+  token: string,
+): Promise<void> {
+  const response = await fetch(`/api/v1/approval/${actionPackageId}/decision`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ decision, rationale }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`approval decision failed: ${response.status}`);
+  }
+}
+```
+
 ### 2) Stream Processor Example (Python)
 
 ```python
@@ -504,6 +561,24 @@ def evaluate(run_id: str, predictions: list[int], labels: list[int], latencies_m
   "hash_prev": "6c71...",
   "hash_self": "a22f..."
 }
+```
+
+### 6) SQL Eval Materialization for Promotion Decisions
+
+```sql
+CREATE MATERIALIZED VIEW artemis_eval_promotion_guardrail AS
+SELECT
+  candidate_version,
+  AVG(precision)                       AS precision_avg,
+  AVG(recall)                          AS recall_avg,
+  PERCENTILE_CONT(0.95) WITHIN GROUP (
+    ORDER BY latency_p95_ms
+  )                                    AS p95_latency_ms,
+  AVG(policy_violation_rate)           AS policy_violation_rate_avg,
+  AVG(operator_override_rate)          AS operator_override_rate_avg
+FROM artemis_eval_results
+WHERE run_ts >= NOW() - INTERVAL '14 days'
+GROUP BY candidate_version;
 ```
 
 ---
