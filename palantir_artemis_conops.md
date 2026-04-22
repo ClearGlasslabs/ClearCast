@@ -54,7 +54,7 @@ Use this hero block as a **mission status entry point** on the dashboard landing
 ```html
 <section class="hero-container">
     <div class="overlay"></div>
-    <img src="assets/repo-banner.png" id="hero-img" alt="System Interface">
+    <img src="/index.html" id="hero-img" alt="System Interface">
     <div class="hero-text">
         <h1 class="glitch">SYSTEM STATUS: ACTIVE</h1>
         <p>Security Auditing | Thread Detection | Automation</p>
