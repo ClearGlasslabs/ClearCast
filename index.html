@@ -3,71 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ClearGlassInc.GitHub.io | Future Through Transparency</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#0b1020" />
+  <title>ClearGlassInc Artemis | Mission Intelligence</title>
+  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <canvas id="starfield" aria-hidden="true"></canvas>
 
   <header class="topbar">
-    <div class="brand">ClearGlassInc.GitHub.io</div>
+    <div class="brand">ClearGlassInc Artemis</div>
     <nav>
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#metrics">Impact</a>
-      <a href="palantir_artemis_conops.md">Artemis CONOPS</a>
+      <a href="#live">Live Ops</a>
+      <a href="#metrics">Metrics</a>
+      <a href="artemis_conops.html">Artemis CONOPS</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
     </nav>
   </header>
 
   <main>
-    <section class="hero">
-      <p class="eyebrow">NEXT-GEN STRATEGY + BUILD</p>
-      <h1>Designing a <span>transparent</span> future, one intelligent product at a time.</h1>
-      <p class="subtext">
-        We blend AI, cloud engineering, and cinematic design to build businesses that feel alive.
-      </p>
+    <section class="hero panel">
+      <p class="eyebrow">REAL-TIME INTELLIGENCE OPERATIONS</p>
+      <h1>Machine-speed situational awareness for <span>ClearGlassInc Artemis</span>.</h1>
+      <p class="subtext">Fused mission data, operator-in-the-loop AI, and resilient workflows built for secure high-tempo environments.</p>
+      <a class="btn primary" href="artemis_conops.html">Open Artemis CONOPS</a>
     </section>
 
-    <section id="about" class="panel">
-      <h2>Why ClearGlassInc.GitHub.io?</h2>
-      <p>
-        We help ambitious teams launch fast, scale smart, and stay radically clear. Our model combines
-        precision engineering with bold design so your brand not only works—it moves people.
-      </p>
-    </section>
-
-    <section id="services" class="cards">
-      <article class="card">
-        <h3>AI Product Engineering</h3>
-        <p>From MVP to production-grade systems with modern architecture and automation.</p>
-      </article>
-      <article class="card">
-        <h3>Immersive Brand Experience</h3>
-        <p>Futuristic interfaces, premium visual systems, and memorable digital journeys.</p>
-      </article>
-      <article class="card">
-        <h3>Growth Intelligence</h3>
-        <p>Real-time analytics, optimization loops, and strategic execution driven by data.</p>
-      </article>
+    <section id="live" class="panel live-grid">
+      <canvas id="nerveCanvas" width="460" height="280" aria-label="Live operational signal visualization"></canvas>
+      <div id="dataDisplay" aria-live="polite" class="signal-card">
+        <h2>Live Tracking Information</h2>
+        <p id="signalStrength">Signal Strength: --</p>
+        <p id="nerveActivity">Nerve Activity: --</p>
+        <p id="trackingStatus">Tracking Status: Booting</p>
+      </div>
     </section>
 
     <section id="metrics" class="metrics panel">
       <div>
-        <h3><span class="counter" data-target="120">0</span>+</h3>
-        <p>Products Delivered</p>
+        <h3><span class="counter" data-target="97">0</span>%</h3>
+        <p>Precision @ mission alerts</p>
       </div>
       <div>
-        <h3><span class="counter" data-target="42">0</span>%</h3>
-        <p>Average Conversion Lift</p>
+        <h3><span class="counter" data-target="89">0</span>%</h3>
+        <p>Operator approval confidence</p>
       </div>
       <div>
-        <h3><span class="counter" data-target="99">0</span>.9%</h3>
-        <p>Cloud Uptime Confidence</p>
+        <h3><span class="counter" data-target="420">0</span>ms</h3>
+        <p>Median triage latency</p>
       </div>
     </section>
 
@@ -85,7 +69,7 @@
   </main>
 
   <footer>
-    © <span id="year"></span> ClearGlassInc.GitHub.io • Built for speed, clarity, and momentum.
+    © <span id="year"></span> ClearGlassInc Artemis
     <div class="legal-links">
       <a href="privacy.html">Privacy Policy</a>
       <a href="terms.html">Terms of Service</a>
