@@ -7,6 +7,7 @@ ClearGlassInc Artemis is an enterprise cybersecurity and intelligence engineerin
 - Legal pages (`privacy.html`, `terms.html`)
 - Corporate documentation package (`docs/*.md`)
 - Palantir full-stack implementation blueprint (`docs/ARTEMIS_PLATFORM_ARCHITECTURE.md`)
+- COO operations system prompt (`docs/COO_BOT_PROMPT.md`)
 
 ## Suggested Repository Description
 `Enterprise cybersecurity intelligence engineering by ClearGlassInc Artemis: secure-by-design architecture, governance-first documentation, and AI-assisted mission operations.`
