@@ -8,6 +8,7 @@ ClearGlassInc Artemis is an enterprise cybersecurity and intelligence engineerin
 - Corporate documentation package (`docs/*.md`)
 - Palantir full-stack implementation blueprint (`docs/ARTEMIS_PLATFORM_ARCHITECTURE.md`)
 - Self-evolving intelligence platform design (`docs/clearglassinc_artemis_self_evolving_platform.md`)
+- Self-evolving AI implementation blueprint (deep technical, Python-first) (`docs/CLEARGLASSINC_ARTEMIS_SELF_EVOLVING_AI_PLATFORM_BLUEPRINT.md`)
 - Agentic bot implementation blueprint (`docs/ARTEMIS_AGENTIC_BOT_BLUEPRINT.md`)
 - COO operations system prompt (`docs/COO_BOT_PROMPT.md`)
 
