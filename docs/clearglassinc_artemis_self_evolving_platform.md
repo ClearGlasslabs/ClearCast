@@ -558,6 +558,121 @@ CREATE TABLE audit_decision_ledger (
 );
 ```
 
+### 7.7 TypeScript API gateway: mission-scoped context envelope
+
+```ts
+// gateway/src/middleware/contextEnvelope.ts
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+
+export interface RequestContext {
+  userId: string;
+  role: "analyst" | "senior_analyst" | "commander" | "legal" | "platform_admin";
+  missionIds: string[];
+  coalitionTags: string[];
+  clearance: "SECRET" | "TOP_SECRET";
+  traceId: string;
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      ctx?: RequestContext;
+    }
+  }
+}
+
+export function contextEnvelope(req: Request, _res: Response, next: NextFunction) {
+  const auth = req.headers.authorization ?? "";
+  const token = auth.replace("Bearer ", "");
+  const claims = jwt.decode(token) as any;
+  if (!claims) throw new Error("Missing JWT claims");
+
+  req.ctx = {
+    userId: claims.sub,
+    role: claims.role,
+    missionIds: claims.missions ?? [],
+    coalitionTags: claims.coalition ?? [],
+    clearance: claims.clearance,
+    traceId: req.headers["x-trace-id"]?.toString() ?? crypto.randomUUID(),
+  };
+  next();
+}
+```
+
+### 7.8 Policy-as-code (Cedar): action approval contract
+
+```cedar
+permit(
+  principal in ClearGlassIncArtemis::Role::"commander",
+  action in [ClearGlassIncArtemis::Action::"ApproveActionPackage"],
+  resource
+)
+when {
+  principal.clearance == "TOP_SECRET" &&
+  resource.riskLevel != "UNBOUNDED" &&
+  resource.missionId in principal.assignedMissions
+};
+
+forbid(
+  principal,
+  action in [ClearGlassIncArtemis::Action::"ApproveActionPackage"],
+  resource
+)
+when {
+  resource.coalitionBoundary notin principal.coalitionTags
+};
+```
+
+### 7.9 Streaming consumer: operator feedback to eval dataset builder
+
+```python
+# services/evals/feedback_consumer.py
+from confluent_kafka import Consumer
+from dataclasses import dataclass
+import json
+
+@dataclass
+class FeedbackSignal:
+    event_id: str
+    case_id: str
+    operator_id: str
+    action: str  # accepted | rejected | corrected_summary
+    model_version: str
+    prompt_version: str
+    workflow_version: str
+    mission_id: str
+    ts: str
+
+def run():
+    c = Consumer({
+        "bootstrap.servers": "kafka:9092",
+        "group.id": "eval-signal-builder",
+        "auto.offset.reset": "earliest"
+    })
+    c.subscribe(["intel.feedback.operator"])
+
+    while True:
+        msg = c.poll(1.0)
+        if not msg or msg.error():
+            continue
+        payload = json.loads(msg.value())
+        signal = FeedbackSignal(**payload)
+
+        # write normalized signals to eval feature store
+        row = {
+            "signal_id": f"{signal.case_id}:{signal.ts}",
+            "label": 1 if signal.action == "accepted" else 0,
+            "operator_action": signal.action,
+            "model_version": signal.model_version,
+            "prompt_version": signal.prompt_version,
+            "workflow_version": signal.workflow_version,
+            "mission_id": signal.mission_id,
+            "event_id": signal.event_id,
+        }
+        # upsert_feature_store(row)  # platform-specific sink
+```
+
 ---
 
 ## 8) Scenario Walkthrough (Cinematic + Technical)
