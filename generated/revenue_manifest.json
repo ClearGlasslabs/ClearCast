@@ -1,0 +1,31 @@
+{
+  "generated_at": "2026-04-24T17:08:17.662396+00:00",
+  "site": "ClearGlassInc Artemis",
+  "base_url": "https://clearglassinc.art",
+  "pages": [
+    {
+      "slug": "zero-trust-playbook",
+      "title": "Zero-Trust Rollout Playbook",
+      "path": "generated/zero-trust-playbook.html"
+    },
+    {
+      "slug": "soc-automation-scorecard",
+      "title": "SOC Automation Scorecard",
+      "path": "generated/soc-automation-scorecard.html"
+    },
+    {
+      "slug": "executive-cyber-briefing-template",
+      "title": "Executive Cyber Briefing Template",
+      "path": "generated/executive-cyber-briefing-template.html"
+    }
+  ],
+  "lead_capture_provider": "ConvertKit",
+  "monetization": {
+    "ads_enabled": true,
+    "affiliate_enabled": true,
+    "donations_enabled": true,
+    "subscriptions_enabled": true,
+    "digital_products_enabled": true,
+    "btc_donation_address": "bc1qppmeg3sr7h9kncthwslm9aj6gtkdnva7artfkk"
+  }
+}
