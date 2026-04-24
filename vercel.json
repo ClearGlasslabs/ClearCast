@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.clearglassinc.io"
+        }
+      ],
+      "destination": "https://clearglassinc.io/:path*",
+      "permanent": true
+    }
+  ]
+}

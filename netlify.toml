@@ -1,0 +1,22 @@
+[[redirects]]
+  from = "http://clearglassinc.io/*"
+  to = "https://clearglassinc.io/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.clearglassinc.io/*"
+  to = "https://clearglassinc.io/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.clearglassinc.io/*"
+  to = "https://clearglassinc.io/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
