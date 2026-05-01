@@ -32,9 +32,7 @@ This repository is a **plain HTML/CSS/JS static site** (`index.html` is already 
 ### 2) Workflow used in this repo
 - File: `.github/workflows/deploy-pages.yml`
 - Trigger: pushes to `main` + manual run.
-- Behavior: copies repository site files into `_site/`, validates `index.html`, adds `.nojekyll`, uploads artifact, then deploys to Pages.
-
-- Troubleshooting runbook: `docs/GITHUB_PAGES_TROUBLESHOOTING.md`
+- Behavior: copies repository site files into `_site/`, uploads artifact, deploys to Pages.
 
 ### 3) Verification checklist
 - Confirm Actions workflow run succeeded.
