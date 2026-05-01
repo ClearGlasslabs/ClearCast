@@ -1,3 +1,4 @@
+name: GitHub Pages
 name: Deploy static site to GitHub Pages
 
 on:
@@ -9,6 +10,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: "github-pages"
+  cancel-in-progress: true
   pages: write
   id-token: write
 
@@ -20,12 +25,43 @@ jobs:
   verify:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
     steps:
       - uses: actions/checkout@v4
       - name: Verify static site structure
         run: |
           set -euo pipefail
           test -f index.html || (echo "Missing root index.html" && exit 1)
+      - name: Build preview artifact
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          rsync -av --delete --exclude '.git' \
+                    --exclude '.github' \
+                    --exclude 'node_modules' \
+                    --exclude '_site' \
+                    ./ ./_site/
+          test -f _site/index.html
+          touch _site/.nojekyll
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
           test -f CNAME      || (echo "Missing CNAME for custom domain" && exit 1)
 
   build:
@@ -37,6 +73,18 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      - name: Build static artifact
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          rsync -av --delete --exclude '.git' \
+                    --exclude '.github' \
+                    --exclude 'node_modules' \
+                    --exclude '_site' \
+                    ./ ./_site/
+
+          test -f _site/index.html || (echo "ERROR: index.html missing from artifact" && exit 1)
+          touch _site/.nojekyll
       - name: Stage artifact
         run: |
           set -euo pipefail
