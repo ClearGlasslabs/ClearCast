@@ -17,3 +17,34 @@ ClearGlassInc Artemis is an enterprise cybersecurity and intelligence engineerin
 
 ## Suggested Repository Description
 `Enterprise cybersecurity intelligence engineering by ClearGlassInc Artemis: secure-by-design architecture, governance-first documentation, and AI-assisted mission operations.`
+
+
+## GitHub Pages Deployment (Recommended)
+This repository is a **plain HTML/CSS/JS static site** (`index.html` is already at repo root), so the fastest reliable deployment path is **GitHub Actions + Pages artifact deploy**.
+
+### 1) Required repository settings
+1. Open **Settings → Pages**.
+2. Under **Build and deployment**, set **Source = GitHub Actions**.
+3. If using a custom domain, keep `CNAME` in repo root (`clearglassinc.io`) and configure your DNS:
+   - `A` records for apex domain to GitHub Pages IPs.
+   - `CNAME` for `www` to `<username>.github.io`.
+
+### 2) Workflow used in this repo
+- File: `.github/workflows/deploy-pages.yml`
+- Trigger: pushes to `main` + manual run.
+- Behavior: copies repository site files into `_site/`, validates `index.html`, adds `.nojekyll`, uploads artifact, then deploys to Pages.
+
+- Troubleshooting runbook: `docs/GITHUB_PAGES_TROUBLESHOOTING.md`
+- Netlify migration/cutover guide: `docs/PAGES_CUTOVER_FROM_NETLIFY.md`
+- Quick fix playbook: `docs/PAGES_QUICK_FIX_PLAYBOOK.md`
+
+### 3) Verification checklist
+- Confirm Actions workflow run succeeded.
+- Open: `https://<username>.github.io/<repo>/` (or custom domain).
+- If blank/404:
+  - Ensure Pages source is **GitHub Actions**.
+  - Ensure `index.html` exists in deployed artifact.
+  - Check asset paths are relative (e.g., `./styles.css` not `/styles.css`) for project-site URLs.
+
+### 4) Framework-specific note
+If this project later migrates to React/Vite/Next.js/Astro/Svelte, replace static copy step with framework build output (`dist`, `out`, etc.) and set framework base path/static export options accordingly.
