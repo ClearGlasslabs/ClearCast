@@ -37,6 +37,7 @@ This repository is a **plain HTML/CSS/JS static site** (`index.html` is already 
 - Troubleshooting runbook: `docs/GITHUB_PAGES_TROUBLESHOOTING.md`
 - Netlify migration/cutover guide: `docs/PAGES_CUTOVER_FROM_NETLIFY.md`
 - Quick fix playbook: `docs/PAGES_QUICK_FIX_PLAYBOOK.md`
+- Risk ownership governance: `docs/RISK_OWNERSHIP_GOVERNANCE.md`
 - Behavior: copies repository site files into `_site/`, uploads artifact, deploys to Pages.
 
 ### 3) Verification checklist
