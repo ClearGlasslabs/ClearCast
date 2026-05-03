@@ -1,0 +1,9 @@
+# Global default owner
+* @OPENWINDOW369
+
+# Deployment ownership
+/.github/workflows/deploy-pages.yml @OPENWINDOW369
+/docs/RISK_OWNERSHIP_GOVERNANCE.md @OPENWINDOW369
+/docs/PAGES_* @OPENWINDOW369
+/docs/GITHUB_PAGES_TROUBLESHOOTING.md @OPENWINDOW369
+/docs/DEPLOY_PAGES_2026_REFERENCE.md @OPENWINDOW369
