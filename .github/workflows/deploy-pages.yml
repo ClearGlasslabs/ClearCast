@@ -1,6 +1,9 @@
 # service_owner: Platform Owner (ClearGlassInc Artemis)
 # escalation: DevOps Engineer -> Security Lead -> Incident Commander
 name: Deploy to GitHub Pages
+name: GitHub Pages
+name: GitHub Pages
+name: Deploy static site to GitHub Pages
 
 on:
   push:
@@ -19,6 +22,21 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+  group: "github-pages"
+  cancel-in-progress: true
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -65,11 +83,79 @@ jobs:
             echo "No known build output found (dist/build/out/_site)" >&2
             exit 1
           fi
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify static site structure
+        run: |
+          set -euo pipefail
+          test -f index.html || (echo "Missing root index.html" && exit 1)
+      - name: Build preview artifact
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          rsync -av --delete --exclude '.git' \
+                    --exclude '.github' \
+                    --exclude 'node_modules' \
+                    --exclude '_site' \
+                    ./ ./_site/
+          test -f _site/index.html
+          touch _site/.nojekyll
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+          test -f CNAME      || (echo "Missing CNAME for custom domain" && exit 1)
+
+  build:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build static artifact
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          rsync -av --delete --exclude '.git' \
+                    --exclude '.github' \
+                    --exclude 'node_modules' \
+                    --exclude '_site' \
+                    ./ ./_site/
+
+          test -f _site/index.html || (echo "ERROR: index.html missing from artifact" && exit 1)
+          touch _site/.nojekyll
+      - name: Stage artifact
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          rsync -a --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='_site' \
+            ./ ./_site/
+          touch _site/.nojekyll
+          test -f _site/index.html
+          test -f _site/CNAME
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ steps.artifact.outputs.path }}
+          path: _site
 
   deploy:
     if: github.event_name != 'pull_request'
@@ -81,6 +167,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
