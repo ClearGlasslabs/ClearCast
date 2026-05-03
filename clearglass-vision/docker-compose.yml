@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    volumes: ["./mosquitto:/mosquitto/config"]
+    ports: ["1883:1883"]
+  frigate:
+    image: ghcr.io/blakeblackshear/frigate:stable
+    privileged: true
+    shm_size: "512mb"
+    depends_on: [mosquitto]
+    volumes:
+      - ./frigate/config.yml:/config/config.yml:ro
+      - ./frigate/media:/media/frigate
+    ports: ["5000:5000"]
+  compreface:
+    image: exadel/compreface:latest
+    ports: ["8000:80"]
+  double-take:
+    image: jakowenko/double-take:latest
+    environment:
+      - DETECTOR=frigate
+      - MQTT_HOST=mosquitto
+      - FRIGATE_URL=http://frigate:5000
+      - COMPREFACE_URL=http://compreface
+    depends_on: [frigate, mosquitto, compreface]
+    ports: ["3000:3000"]
+  ollama:
+    image: ollama/ollama:latest
+    volumes: ["./ollama:/root/.ollama"]
+    ports: ["11434:11434"]
+  vlm-bridge:
+    build: ./vlm-bridge
+    environment:
+      - MQTT_HOST=mosquitto
+      - FRIGATE_URL=http://frigate:5000
+      - OLLAMA_URL=http://ollama:11434
+      - OLLAMA_MODEL=qwen3-vl
+    depends_on: [mosquitto, frigate, ollama]
+  nginx:
+    image: nginx:stable
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports: ["443:443"]
+  tailscale:
+    image: tailscale/tailscale:stable
+    network_mode: host
+    cap_add: ["NET_ADMIN", "SYS_MODULE"]
+    volumes: ["./tailscale:/tailscale"]
+    command: ["/bin/sh", "/tailscale/tailscale-up.sh"]

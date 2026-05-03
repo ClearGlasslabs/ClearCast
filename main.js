@@ -12,6 +12,7 @@ import { mountTasks }           from './modules/components/tasks.js';
 import { mountQuantumInsights } from './modules/components/quantumInsights.js';
 import { mountAIPanel }         from './modules/components/aiPanel.js';
 import { mountSurveillance }    from './modules/components/surveillance.js';
+import { mountTpVision }        from './modules/components/tpVision.js';
 import { mountTicker }          from './modules/ticker.js';
 
 // ── Starfield background (preserved, enhanced) ────────────────────────────────
@@ -69,6 +70,7 @@ function mountApp() {
   mountQuantumInsights(document.getElementById('tab-quantum'));
   mountAIPanel(document.getElementById('tab-ai'));
   mountSurveillance(document.getElementById('tab-surveillance'));
+  mountTpVision(document.getElementById('tab-tp-vision'));
 
   // Restore persisted tab selection
   showTab(state.settings.selectedTab);
