@@ -1,0 +1,106 @@
+name: Server Test & Deploy (self-hosted)
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: server-test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ------------------------------------------------------------------
+  # Lint & integrity checks – runs on the self-hosted runner
+  # ------------------------------------------------------------------
+  validate:
+    name: Validate static site
+    runs-on: [self-hosted, linux, clearglass]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify required files exist
+        run: |
+          set -euo pipefail
+          test -f index.html  || (echo "Missing index.html"  && exit 1)
+          test -f CNAME       || (echo "Missing CNAME"       && exit 1)
+          echo "Static site structure OK"
+
+      - name: Python integrity check
+        run: |
+          python3 scripts/site_integrity_check.py
+
+  # ------------------------------------------------------------------
+  # Build artifact – only on push to main / workflow_dispatch
+  # ------------------------------------------------------------------
+  build:
+    name: Build site artifact
+    needs: validate
+    if: github.event_name != 'pull_request'
+    runs-on: [self-hosted, linux, clearglass]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Stage artifact
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          rsync -av --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='_site' \
+            --exclude='runner' \
+            ./ ./_site/
+          touch _site/.nojekyll
+          test -f _site/index.html
+          test -f _site/CNAME
+          echo "Artifact staged successfully"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-artifact
+          path: _site/
+          retention-days: 7
+
+  # ------------------------------------------------------------------
+  # Optional SSH deploy – triggered manually or on main push
+  # Requires repository secrets: SERVER_HOST, SERVER_USER, PRIVATE_KEY
+  # ------------------------------------------------------------------
+  deploy:
+    name: Deploy via SSH
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, linux, clearglass]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to VPS
+        # Skip gracefully when secrets are not configured
+        if: >
+          secrets.SERVER_HOST != '' &&
+          secrets.SERVER_USER != '' &&
+          secrets.PRIVATE_KEY != ''
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host:     ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key:      ${{ secrets.PRIVATE_KEY }}
+          port:     22
+          script: |
+            set -euo pipefail
+            cd ~/clearglassinc
+            git pull origin main
+            echo "Deployed at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
