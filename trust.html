@@ -8,7 +8,20 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="legal-page panel">
+  <canvas id="starfield" aria-hidden="true"></canvas>
+
+  <header class="topbar">
+    <div class="brand">ClearGlassInc Artemis</div>
+    <nav aria-label="Primary">
+      <a href="index.html">Overview</a>
+      <a href="services.html">Services</a>
+      <a href="trust.html">Trust</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main class="legal-page">
     <a class="legal-back" href="index.html">← Back to homepage</a>
     <h1>Trust Center</h1>
     <p>ClearGlassInc Artemis maintains an auditable documentation framework to support client trust, operational accountability, and long-term governance maturity.</p>
@@ -24,5 +37,20 @@
     <h2 id="status">Status</h2>
     <p>All core web content and trust documentation are currently operational. Security advisories and maintenance updates are published through this Trust Center.</p>
   </main>
+
+  <footer class="site-footer" aria-label="Global footer">
+    <div class="footer-meta">
+      <span>© <span id="year"></span> ClearGlassInc Artemis</span>
+      <span>All rights reserved</span>
+    </div>
+    <nav class="footer-nav" aria-label="Footer utility navigation">
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="trust.html">Security</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>

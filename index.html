@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0b1020" />
+  <meta name="theme-color" content="#04060d" />
   <meta name="description" content="ClearGlassInc Artemis is an enterprise cybersecurity and intelligence engineering organization delivering secure-by-design operations, governance, and AI-assisted mission systems." />
   <meta name="keywords" content="cybersecurity consulting, enterprise security operations, secure software architecture, intelligence engineering, governance, incident response" />
   <meta property="og:title" content="ClearGlassInc Artemis | Enterprise Cybersecurity Intelligence" />
@@ -18,53 +18,117 @@
 
   <header class="topbar">
     <div class="brand">ClearGlassInc Artemis</div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
+    <nav aria-label="Primary">
+      <a href="index.html">Overview</a>
       <a href="services.html">Services</a>
+      <a href="trust.html">Trust</a>
+      <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
-      <a href="trust.html">Trust Center</a>
     </nav>
   </header>
 
   <main>
-    <section class="hero panel">
-      <p class="eyebrow">ENTERPRISE CYBERSECURITY & INTELLIGENCE ENGINEERING</p>
-      <h1>Operational trust at machine speed for <span>mission-critical organizations</span>.</h1>
-      <p class="subtext">ClearGlassInc Artemis provides cybersecurity architecture, secure data operations, and AI-enabled intelligence workflows built for high-assurance environments. Founded by Desmond Otieno Odhiambo.</p>
-      <a class="btn primary" href="services.html">Review Services</a>
-    </section>
+    <section class="bento" aria-label="Mission overview">
+      <!-- Hero -->
+      <article class="panel hero span-6">
+        <span class="eyebrow">Enterprise Cybersecurity · Intelligence Engineering</span>
+        <h1>Operational trust at machine speed for <span>mission-critical organizations</span>.</h1>
+        <p class="subtext">ClearGlassInc Artemis delivers cybersecurity architecture, secure data operations, and AI-enabled intelligence workflows engineered for high-assurance environments. Founded and led by Desmond Otieno Odhiambo.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="services.html">Review services</a>
+          <a class="btn ghost" href="trust.html">Open trust center</a>
+        </div>
+        <div class="chip-row">
+          <span class="chip live"><span class="dot"></span>Posture · Operational</span>
+          <span class="chip"><span class="dot"></span>Governance · Auditable</span>
+          <span class="chip"><span class="dot"></span>Founder-led · 2026</span>
+        </div>
+      </article>
 
-    <section class="panel split-grid">
-      <div>
-        <h2>Company Overview</h2>
-        <p>ClearGlassInc Artemis is a cybersecurity-focused engineering organization delivering secure software architecture, operational governance, and resilient intelligence systems across public and private sector missions.</p>
-      </div>
-      <div>
-        <h2>Security Statement</h2>
-        <p>Our operating model enforces least-privilege access, auditable workflows, controlled releases, and policy-aligned data handling standards designed for enterprise assurance and regulatory readiness.</p>
-      </div>
-    </section>
+      <!-- Capabilities (left, taller) -->
+      <article class="panel span-4 row-2">
+        <p class="card-eyebrow">Capabilities</p>
+        <h2 class="card-title">A disciplined operating surface for security and intelligence.</h2>
+        <p class="card-body">Every engagement runs on documented controls, evidence-backed decisions, and reversible automation — engineered for organizations that cannot afford ambiguity.</p>
 
-    <section id="metrics" class="metrics panel">
-      <div>
-        <h3><span class="counter" data-target="99">0</span>%</h3>
-        <p>Policy-tracked workflow coverage</p>
-      </div>
-      <div>
-        <h3><span class="counter" data-target="24">0</span>/7</h3>
-        <p>Security monitoring posture</p>
-      </div>
-      <div>
-        <h3><span class="counter" data-target="450">0</span>ms</h3>
-        <p>Target triage response latency</p>
-      </div>
-    </section>
+        <div class="split-grid" style="margin-top:1.4rem;">
+          <div>
+            <h2>Cybersecurity Architecture</h2>
+            <p>Zero-trust design, hardened software patterns, and infrastructure baselines mapped to enterprise risk.</p>
+          </div>
+          <div>
+            <h2>Security Operations</h2>
+            <p>Detection engineering, incident readiness, and operator playbooks tuned for high-tempo response.</p>
+          </div>
+          <div>
+            <h2>Governance &amp; Assurance</h2>
+            <p>Policy frameworks, control mapping, and evidence pipelines for internal and external attestation.</p>
+          </div>
+          <div>
+            <h2>AI Workflow Assurance</h2>
+            <p>Human-approved AI workflows with model governance, evaluation harnesses, and rollback safeguards.</p>
+          </div>
+        </div>
 
-    <section class="panel">
-      <h2>Governance and Compliance</h2>
-      <p>Documentation for privacy, terms, incident response, vulnerability disclosure, data handling, and repository governance is available through the Trust Center for clients, partners, and compliance stakeholders.</p>
-      <a class="btn primary" href="trust.html">Open Trust Center</a>
+        <a class="card-link" href="services.html">Engagement model</a>
+      </article>
+
+      <!-- Live Posture chip card -->
+      <article class="panel span-2">
+        <p class="card-eyebrow">Live Posture</p>
+        <h2 class="card-title">Calm, observable, accountable.</h2>
+        <p class="card-body">Continuous control telemetry feeds the same operator surface trusted by mission staff.</p>
+        <div class="chip-row">
+          <span class="chip live"><span class="dot"></span>Monitoring</span>
+          <span class="chip live"><span class="dot"></span>Identity</span>
+          <span class="chip live"><span class="dot"></span>Audit log</span>
+          <span class="chip warn"><span class="dot"></span>Drills · Quarterly</span>
+        </div>
+      </article>
+
+      <!-- Trust framework (top right second row) -->
+      <article class="panel span-2">
+        <p class="card-eyebrow">Trust Framework</p>
+        <h2 class="card-title">Evidence by default.</h2>
+        <p class="card-body">Privacy, incident response, vulnerability disclosure, data handling, and access policy under a single auditable framework.</p>
+        <a class="card-link" href="trust.html">Open trust center</a>
+      </article>
+
+      <!-- Metrics -->
+      <article class="panel span-6" aria-label="Operating posture metrics">
+        <p class="card-eyebrow">Operating Posture</p>
+        <section class="metrics">
+          <div>
+            <h3><span class="counter" data-target="99">0</span>%</h3>
+            <p>Policy-tracked workflow coverage</p>
+          </div>
+          <div>
+            <h3><span class="counter" data-target="24">0</span>/7</h3>
+            <p>Security monitoring posture</p>
+          </div>
+          <div>
+            <h3><span class="counter" data-target="450">0</span>ms</h3>
+            <p>Target triage response latency</p>
+          </div>
+        </section>
+      </article>
+
+      <!-- Governance + CTA -->
+      <article class="panel span-3">
+        <p class="card-eyebrow">Governance Statement</p>
+        <h2 class="card-title">Least-privilege, by design.</h2>
+        <p class="card-body">Our operating model enforces auditable workflows, controlled releases, and policy-aligned data handling for enterprise assurance and regulatory readiness.</p>
+        <a class="card-link" href="trust.html">Governance documents</a>
+      </article>
+
+      <article class="panel span-3">
+        <p class="card-eyebrow">Engagement</p>
+        <h2 class="card-title">Begin with a scoped conversation.</h2>
+        <p class="card-body">Initial engagements define scope, data sensitivity classification, control requirements, and expected governance cadence.</p>
+        <div class="hero-actions" style="margin-top:1.1rem;">
+          <a class="btn primary" href="contact.html">Contact engagement lead</a>
+        </div>
+      </article>
     </section>
   </main>
 
