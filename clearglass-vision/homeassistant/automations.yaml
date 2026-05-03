@@ -1,0 +1,9 @@
+- id: frigate_critical_notice
+  alias: "Frigate critical notice to Slack"
+  trigger:
+    - platform: mqtt
+      topic: clearglass/vision/notice
+  action:
+    - service: notify.slack
+      data:
+        message: "{{ trigger.payload }}"

@@ -11,6 +11,7 @@ export const TAB_CONFIG = [
   { id: 'quantum',      label: 'QUANTUM',      icon: '⬡' },
   { id: 'ai',           label: 'AI CORE',      icon: '◎' },
   { id: 'surveillance', label: 'SURVEILLANCE', icon: '⊕' },
+  { id: 'tp-vision',    label: 'TP-VISION',    icon: '◬' },
 ];
 
 export function mountNav(el, onTabChange) {

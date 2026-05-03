@@ -1,0 +1,32 @@
+mqtt:
+  host: mosquitto
+  topic_prefix: frigate
+
+detectors:
+  coral:
+    type: edgetpu
+    device: usb
+
+record:
+  enabled: true
+  retain:
+    days: 7
+
+snapshots:
+  enabled: true
+  retain:
+    default: 14
+
+cameras:
+  perimeter_north:
+    ffmpeg:
+      inputs:
+        - path: rtsp://user:pass@cam-north/stream1
+          roles: [detect, record]
+    detect:
+      enabled: true
+      width: 1280
+      height: 720
+    motion:
+      mask:
+        - 0,0,0,80,1280,80,1280,0
