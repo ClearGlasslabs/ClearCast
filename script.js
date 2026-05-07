@@ -125,9 +125,37 @@
     });
   }
 
+
+  function initLoadingScreen() {
+    const loadingScreen = document.getElementById('loadingScreen');
+    const progressText = document.getElementById('progressValue');
+    const progressGlow = document.getElementById('progressGlow');
+    if (!loadingScreen || !progressText || !progressGlow) return;
+
+    const perimeter = Number((progressGlow.getTotalLength?.() || 520).toFixed(2));
+    progressGlow.style.setProperty('--hex-perimeter', String(perimeter));
+    let progress = 0;
+
+    function advance() {
+      progress = Math.min(100, progress + Math.max(1, Math.floor(Math.random() * 7)));
+      progressText.textContent = `${progress}%`;
+      progressGlow.style.strokeDasharray = String(perimeter);
+      progressGlow.style.strokeDashoffset = String(perimeter - (perimeter * progress) / 100);
+
+      if (progress < 100) {
+        setTimeout(advance, 55 + Math.random() * 85);
+      } else {
+        setTimeout(() => loadingScreen.classList.add('hidden'), 340);
+      }
+    }
+
+    setTimeout(advance, 220);
+  }
+
   function init() {
     const yearEl = document.getElementById('year');
     if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+    initLoadingScreen();
     initCounters();
     initNerveCanvas();
     initStarfield();
