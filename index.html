@@ -14,6 +14,27 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div id="loadingScreen" class="loading-screen" role="status" aria-live="polite" aria-label="Initializing command interface">
+    <div class="loading-grid" aria-hidden="true"></div>
+    <div class="loading-core">
+      <p class="loading-label">INITIALIZING</p>
+      <div class="hex-shell">
+        <div class="hex-logo" aria-hidden="true">
+          <span>CG</span>
+        </div>
+        <svg class="hex-progress" viewBox="0 0 240 240" aria-hidden="true">
+          <polygon id="progressTrack" points="120,20 206,70 206,170 120,220 34,170 34,70"></polygon>
+          <polygon id="progressGlow" points="120,20 206,70 206,170 120,220 34,170 34,70"></polygon>
+        </svg>
+      </div>
+      <div class="progress-meta">
+        <span class="progress-value" id="progressValue">0%</span>
+        <span class="progress-tag">SYSTEM READY SEQUENCE</span>
+      </div>
+      <p class="microtext">C L E A R G L A S S I N C&nbsp;&nbsp;A R T E M I S&nbsp;&nbsp;//&nbsp;&nbsp;C L A S S I F I E D&nbsp;&nbsp;C O M M A N D&nbsp;&nbsp;I N T E R F A C E</p>
+    </div>
+  </div>
+
   <canvas id="starfield" aria-hidden="true"></canvas>
 
   <header class="topbar">
