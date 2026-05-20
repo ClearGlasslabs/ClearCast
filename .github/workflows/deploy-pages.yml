@@ -1,39 +1,70 @@
 name: GitHub Pages
+
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches: ["main"]
   workflow_dispatch:
+
 permissions:
   contents: read
+  pages: write
+  id-token: write
+
 concurrency:
-  group: pages
+  group: github-pages
   cancel-in-progress: false
+
 jobs:
   build:
+    name: build-static-site
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - run: |
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Validate static site files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f index.html
+          test -f styles.css
+          test -f script.js
+
+      - name: Prepare Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
           mkdir -p _site
-          cp -R . _site
-          rm -rf _site/.git _site/.github _site/_site _site/node_modules
+          find . -mindepth 1 -maxdepth 1 \
+            ! -name '.git' \
+            ! -name '.github' \
+            ! -name '_site' \
+            ! -name 'node_modules' \
+            -exec cp -R {} _site/ \;
           touch _site/.nojekyll
           test -f _site/index.html
-      - uses: actions/upload-pages-artifact@v3
+          test -f _site/styles.css
+          test -f _site/script.js
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: _site
+
   deploy:
-    if: github.event_name != 'pull_request'
+    name: deploy-github-pages
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - id: deployment
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
