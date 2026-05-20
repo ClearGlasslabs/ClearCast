@@ -39,18 +39,18 @@ Manage cookies | Do not share my personal information
   </div>
 
   <nav class="footer-nav" aria-label="Footer utility navigation">
-    <a href="/terms">Terms</a>
-    <a href="/privacy">Privacy</a>
-    <a href="/security">Security</a>
-    <a href="/status">Status</a>
-    <a href="/community">Community</a>
-    <a href="/docs">Docs</a>
-    <a href="/contact">Contact</a>
+    <a href="../terms.html">Terms</a>
+    <a href="../privacy.html">Privacy</a>
+    <a href="../trust.html">Security</a>
+    <a href="../trust.html#status">Status</a>
+    <a href="../about.html">Community</a>
+    <a href="ARTEMIS_PLATFORM_ARCHITECTURE.md">Docs</a>
+    <a href="../contact.html">Contact</a>
   </nav>
 
   <div class="footer-privacy-links" aria-label="Privacy choices">
-    <a href="/privacy#manage-cookies">Manage cookies</a>
-    <a href="/privacy#do-not-share">Do not share my personal information</a>
+    <a href="../privacy.html#manage-cookies">Manage cookies</a>
+    <a href="../privacy.html#do-not-share">Do not share my personal information</a>
   </div>
 </footer>
 ```
