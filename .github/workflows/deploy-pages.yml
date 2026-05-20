@@ -1,58 +1,29 @@
 name: GitHub Pages
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
-
 concurrency:
   group: pages
   cancel-in-progress: false
-
 jobs:
-  verify:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Validate static site source
-        run: test -f index.html
-      - name: Build preview artifact
-        run: |
-          mkdir -p _site
-          rsync -a --delete --exclude='.git' --exclude='.github' --exclude='node_modules' --exclude='_site' ./ ./_site/
-          touch _site/.nojekyll
-          test -f _site/index.html
-
   build:
-    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-      - name: Build static artifact
-        run: |
+      - uses: actions/checkout@v4
+      - run: |
           mkdir -p _site
-          rsync -a --delete --exclude='.git' --exclude='.github' --exclude='node_modules' --exclude='_site' ./ ./_site/
+          cp -R . _site
+          rm -rf _site/.git _site/.github _site/_site _site/node_modules
           touch _site/.nojekyll
           test -f _site/index.html
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
-
   deploy:
     if: github.event_name != 'pull_request'
     needs: build
@@ -64,6 +35,5 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4
