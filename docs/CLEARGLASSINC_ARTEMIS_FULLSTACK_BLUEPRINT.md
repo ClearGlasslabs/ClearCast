@@ -582,3 +582,186 @@ Result: **system gets better** (fewer premature coalition notifications) while p
 ```text
 Create an 8K ultra-wide cinematic GitHub repository banner for ClearGlassInc Artemis, themed “Cybernetic Security & Neural Systems.” Use a deep obsidian background with neon cyan and amber accent lighting. Center a complex translucent 3D orbital data grid with floating digital signal overlays, holographic threat vectors, and subtle code fragments rendered in C# and PowerShell syntax. Visual style should feel like a premium SOC command dashboard: minimalist, high-contrast, ray-traced reflections, volumetric haze, clean negative space for title text, and professional mission-critical tone.
 ```
+
+---
+
+## 10) Python Precision Reference Implementation
+
+This section turns the blueprint into an implementation-oriented control plane for **ClearGlassInc Artemis**. The intent is to make every agent action deterministic at the boundary: typed inputs, policy checks before tools, immutable event emission after tools, and measurable eval outcomes before any self-upgrade reaches operators.
+
+### 10.1 Typed event, policy, and lineage contracts
+
+```python
+# artemis/contracts.py
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Literal
+from uuid import UUID, uuid4
+
+from pydantic import BaseModel, Field, field_validator
+
+
+class Classification(str, Enum):
+    UNCLASSIFIED = "UNCLASSIFIED"
+    CONFIDENTIAL = "CONFIDENTIAL"
+    SECRET = "SECRET"
+    TOP_SECRET = "TOP_SECRET"
+
+
+CLASSIFICATION_RANK = {
+    Classification.UNCLASSIFIED: 0,
+    Classification.CONFIDENTIAL: 1,
+    Classification.SECRET: 2,
+    Classification.TOP_SECRET: 3,
+}
+
+
+class SubjectContext(BaseModel):
+    subject_id: str
+    clearance: Classification
+    compartments: set[str] = Field(default_factory=set)
+    coalition_tags: set[str] = Field(default_factory=set)
+    mission_ids: set[UUID] = Field(default_factory=set)
+    purpose: Literal["investigation", "triage", "commander_brief", "eval"]
+
+
+class LineageRef(BaseModel):
+    source_uri: str
+    source_hash_sha256: str
+    pipeline_run_id: str
+    model_version: str | None = None
+    prompt_hash_sha256: str | None = None
+
+
+class OntologyObject(BaseModel):
+    entity_id: UUID = Field(default_factory=uuid4)
+    entity_type: str
+    canonical_name: str | None = None
+    confidence: float = Field(ge=0.0, le=1.0)
+    classification: Classification
+    compartments: set[str] = Field(default_factory=set)
+    releasable_to: set[str] = Field(default_factory=set)
+    mission_context_id: UUID
+    lineage: list[LineageRef]
+    valid_start: datetime
+    valid_end: datetime | None = None
+    payload: dict[str, Any] = Field(default_factory=dict)
+
+    @field_validator("valid_start")
+    @classmethod
+    def require_timezone(cls, value: datetime) -> datetime:
+        if value.tzinfo is None:
+            raise ValueError("valid_start must be timezone-aware")
+        return value
+
+
+class AuditEvent(BaseModel):
+    audit_id: UUID = Field(default_factory=uuid4)
+    event_type: str
+    actor_id: str
+    mission_context_id: UUID
+    decision_id: str | None = None
+    artifact_hash_sha256: str
+    occurred_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    metadata: dict[str, Any] = Field(default_factory=dict)
+```
+
+### 10.2 Fail-closed policy guard for every tool call
+
+```python
+# artemis/policy_guard.py
+from dataclasses import dataclass
+from typing import Awaitable, Callable, TypeVar
+
+from artemis.contracts import CLASSIFICATION_RANK, OntologyObject, SubjectContext
+
+T = TypeVar("T")
+
+
+class PolicyDenied(PermissionError):
+    pass
+
+
+@dataclass(frozen=True)
+class PolicyDecision:
+    allowed: bool
+    decision_id: str
+    reason: str
+    redactions: set[str]
+
+
+def decide_read(subject: SubjectContext, resource: OntologyObject) -> PolicyDecision:
+    if CLASSIFICATION_RANK[subject.clearance] < CLASSIFICATION_RANK[resource.classification]:
+        return PolicyDecision(False, "deny-clearance", "insufficient clearance", set())
+    if resource.compartments and not resource.compartments.issubset(subject.compartments):
+        return PolicyDecision(False, "deny-compartment", "missing compartment", set())
+    if resource.releasable_to and not subject.coalition_tags.intersection(resource.releasable_to):
+        return PolicyDecision(False, "deny-releasability", "coalition boundary", set())
+    if resource.mission_context_id not in subject.mission_ids:
+        return PolicyDecision(False, "deny-mission", "mission scope mismatch", set())
+    return PolicyDecision(True, "allow-read", "authorized", set())
+
+
+async def execute_with_policy(
+    subject: SubjectContext,
+    resource: OntologyObject,
+    action: str,
+    fn: Callable[[], Awaitable[T]],
+    write_audit: Callable[[PolicyDecision], Awaitable[None]],
+) -> T:
+    decision = decide_read(subject, resource)
+    await write_audit(decision)
+    if not decision.allowed:
+        # Never leak entity names, source IDs, or compartment labels in denial messages.
+        raise PolicyDenied(f"policy denied for action={action}; decision_id={decision.decision_id}")
+    return await fn()
+```
+
+### 10.3 Self-improvement proposal gate
+
+```python
+# artemis/learning_gate.py
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class EvalMetrics:
+    precision: float
+    recall: float
+    calibration_error: float
+    p95_latency_ms: int
+    policy_violations: int
+    operator_trust_delta: float
+
+
+@dataclass(frozen=True)
+class PromotionDecision:
+    promote: bool
+    reason: str
+
+
+def promotion_gate(champion: EvalMetrics, challenger: EvalMetrics) -> PromotionDecision:
+    if challenger.policy_violations != 0:
+        return PromotionDecision(False, "blocked: policy violations")
+    if challenger.precision < max(0.90, champion.precision - 0.005):
+        return PromotionDecision(False, "blocked: precision regression")
+    if challenger.recall < champion.recall - 0.02:
+        return PromotionDecision(False, "blocked: recall regression")
+    if challenger.calibration_error > champion.calibration_error + 0.015:
+        return PromotionDecision(False, "blocked: worse confidence calibration")
+    if challenger.p95_latency_ms > int(champion.p95_latency_ms * 1.15):
+        return PromotionDecision(False, "blocked: latency SLO regression")
+    if challenger.operator_trust_delta < 0:
+        return PromotionDecision(False, "blocked: operator trust declined")
+    return PromotionDecision(True, "eligible for human review and Apollo canary")
+```
+
+### 10.4 Operational invariant checklist
+
+- **No autonomous production mutation:** agents can draft prompt, workflow, and router candidates, but promotion requires signed human approval and Apollo rollout control.
+- **No silent data expansion:** every query includes subject, mission, classification, compartment, coalition, and purpose attributes.
+- **No untraceable intelligence product:** every recommendation stores source hashes, prompt hash, model version, workflow version, policy decision ID, and operator decision.
+- **No unsafe rollback gap:** every release bundle preserves previous prompt/workflow/router artifacts for immediate Apollo rollback.
+- **No raw sensitive feedback leakage:** feedback-derived eval examples are minimized, labeled, access-controlled, and stripped of unnecessary secrets or personally sensitive data before training or replay.
