@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CONDUIT by ClearGlass Inc. is a self-hosted workflow automation command center for governed orchestration, approvals, integrations, observability, and secure execution." />
+  <title>CONDUIT | ClearGlass Inc. Workflow Automation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="starfield" aria-hidden="true"></canvas>
+
+  <header class="topbar">
+    <div class="brand">ClearGlassInc Artemis</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="conduit.html">CONDUIT</a>
+      <a href="contact.html">Contact</a>
+      <a href="trust.html">Trust Center</a>
+    </nav>
+  </header>
+
+  <main class="conduit-page">
+    <section class="hero panel conduit-hero reveal-panel">
+      <p class="eyebrow">CONDUIT // SELF-HOSTED WORKFLOW AUTOMATION</p>
+      <h1>The private automation command center for teams that need <span>governed execution</span>, not black-box workflow glue.</h1>
+      <p class="subtext">CONDUIT turns operational triggers, approvals, integrations, queues, AI-assisted steps, and audit trails into one self-hosted execution layer. It is built for teams that need deterministic automation behavior inside their own infrastructure, with enough control for security leaders and enough speed for operators.</p>
+      <div class="hero-support-grid" aria-label="Alternate hero support lines">
+        <p>Run automations where your data already lives, keep secrets inside your boundary, and expose every workflow decision to review.</p>
+        <p>Orchestrate events, cron jobs, webhooks, APIs, and human approvals through version-controlled execution paths.</p>
+        <p>Give technical teams an extensible automation fabric without surrendering operational telemetry to generic SaaS tooling.</p>
+      </div>
+      <div class="cta-row">
+        <a class="btn primary" href="contact.html">Plan a CONDUIT Deployment</a>
+        <a class="btn secondary" href="#architecture">Review Architecture</a>
+      </div>
+    </section>
+
+    <section id="architecture" class="panel reveal-panel">
+      <p class="eyebrow">ARCHITECTURE OVERVIEW</p>
+      <h2>A modular control plane for event-driven automation</h2>
+      <p>CONDUIT is organized as a compact automation stack: triggers enter through an ingestion surface, workflow definitions are resolved from a versioned registry, jobs are scheduled through queue-backed workers, approvals pause execution at explicit gates, and every step emits traces, logs, artifacts, and policy decisions for later inspection.</p>
+      <div class="module-grid">
+        <article><h3>Trigger Plane</h3><p>API, webhook, cron, repository, incident, form, and message-based events are normalized into typed workflow starts with idempotency keys.</p></article>
+        <article><h3>Execution Engine</h3><p>Self-hosted workers run deterministic steps, retries, branches, timers, connector calls, and AI-assisted tasks under policy constraints.</p></article>
+        <article><h3>Approval Layer</h3><p>Human-in-the-loop gates support single approver, sequential, quorum, break-glass, and escalation-based approval flows.</p></article>
+        <article><h3>Connector Fabric</h3><p>Modular integrations connect internal tools, ticketing systems, cloud services, databases, security platforms, and custom APIs.</p></article>
+        <article><h3>Observability Core</h3><p>Execution history, queue depth, step latency, failure rate, artifact lineage, and trace IDs make automation behavior inspectable.</p></article>
+        <article><h3>Governance Registry</h3><p>Workflow versions, secrets references, permissions, audit events, and environment policies are stored as reviewable operational records.</p></article>
+      </div>
+    </section>
+
+    <section class="panel reveal-panel">
+      <p class="eyebrow">ADVANCED CAPABILITIES</p>
+      <h2>Automation depth that respects production reality</h2>
+      <div class="statement-grid">
+        <p>Event-driven orchestration routes high-volume signals into predictable workflow runs with replayable inputs.</p>
+        <p>The self-hosted execution engine keeps private workflows, logs, payloads, and secrets inside controlled infrastructure.</p>
+        <p>Open-source extensibility allows teams to inspect, modify, package, and govern the automation layer without vendor lock-in.</p>
+        <p>Conditional branching, retries, timeouts, and fallback paths are first-class design elements instead of afterthoughts.</p>
+        <p>Secrets-safe execution references protected values at runtime without exposing them in workflow definitions or logs.</p>
+        <p>Queue-based job processing separates trigger intake from workload execution so spikes do not collapse operational flows.</p>
+        <p>Version-controlled workflow definitions make automation changes reviewable, reproducible, and rollback-ready.</p>
+        <p>Native AI-assisted steps can classify, summarize, enrich, and draft outcomes while preserving explicit approval gates.</p>
+        <p>Exportable execution history gives security, operations, and compliance teams evidence without manual reconstruction.</p>
+        <p>Role-based permissions constrain who can author, approve, execute, inspect, and promote workflow changes.</p>
+      </div>
+    </section>
+
+    <section class="panel reveal-panel">
+      <p class="eyebrow">EXECUTION FLOW</p>
+      <h2>From trigger to audited outcome</h2>
+      <ol class="flow-list">
+        <li><strong>Receive:</strong> an API call, webhook, cron schedule, connector event, or operator action starts a typed workflow run.</li>
+        <li><strong>Validate:</strong> policy checks confirm identity, environment, payload shape, permissions, and execution scope.</li>
+        <li><strong>Resolve:</strong> CONDUIT loads the approved workflow version, connector configuration, secrets references, and retry profile.</li>
+        <li><strong>Execute:</strong> queue-backed workers perform steps, branch on conditions, call tools, and emit structured traces.</li>
+        <li><strong>Approve:</strong> sensitive transitions pause for human review, evidence inspection, and explicit accept/reject decisions.</li>
+        <li><strong>Recover:</strong> failed steps can retry, compensate, escalate, resume from checkpoint, or route to a degraded-safe path.</li>
+        <li><strong>Record:</strong> final state, artifacts, approvals, logs, and timings are stored for audit, export, and continuous improvement.</li>
+      </ol>
+    </section>
+
+    <section class="panel reveal-panel">
+      <p class="eyebrow">TRUST, SECURITY & GOVERNANCE</p>
+      <h2>Designed for controlled automation, not uncontrolled action</h2>
+      <p>CONDUIT treats automation as governed infrastructure. Every high-impact action can be permissioned, reviewed, traced, and rolled back through explicit operational controls.</p>
+      <div class="module-grid compact">
+        <article><h3>Need-to-know operations</h3><p>Role-based permissions separate workflow authorship, execution, approval, secret management, and audit review.</p></article>
+        <article><h3>Immutable audit posture</h3><p>Execution records preserve actor, trigger, version, input digest, approval state, connector target, and final outcome.</p></article>
+        <article><h3>Secure isolation</h3><p>Environment boundaries keep development, staging, production, and sensitive workloads separated by policy.</p></article>
+        <article><h3>Approval accountability</h3><p>Human approval gates capture rationale, evidence, timestamps, approvers, and rejected alternatives.</p></article>
+        <article><h3>Secrets discipline</h3><p>Secrets are referenced through managed providers and redacted from logs, traces, exports, and operator views.</p></article>
+        <article><h3>Compliance-ready evidence</h3><p>Exportable histories support reviews for operational governance, change management, and incident reconstruction.</p></article>
+      </div>
+    </section>
+
+    <section class="panel reveal-panel">
+      <p class="eyebrow">SELF-HOSTING & DEPLOYMENT</p>
+      <h2>Private infrastructure by default</h2>
+      <div class="statement-grid two-col">
+        <p>Deploy CONDUIT on self-managed infrastructure to keep workflow execution near internal systems and protected data.</p>
+        <p>Separate control-plane services from worker pools so sensitive automations can run in isolated network zones.</p>
+        <p>Use environment-specific configuration for local, staging, production, regulated, and air-gapped deployment models.</p>
+        <p>Package connectors, workflows, policies, and runtime configuration as reviewable release artifacts.</p>
+        <p>Scale workers horizontally for high-throughput job processing without changing workflow definitions.</p>
+        <p>Retain operational ownership of logs, telemetry, secrets providers, retention policy, and backup strategy.</p>
+      </div>
+    </section>
+
+    <section class="panel reveal-panel">
+      <p class="eyebrow">INTEGRATIONS</p>
+      <h2>Connect the systems that actually run the business</h2>
+      <p>CONDUIT is built for practical connectivity: internal APIs, ticketing queues, databases, cloud services, identity providers, SIEM tools, repositories, notification channels, and custom operational systems. Connectors are modular so teams can extend the platform without waiting for a marketplace listing.</p>
+      <div class="connector-strip" aria-label="Integration categories">
+        <span>Webhooks</span><span>REST APIs</span><span>Cron</span><span>SQL</span><span>Queues</span><span>Git</span><span>SIEM</span><span>Tickets</span><span>ChatOps</span><span>AI Tools</span>
+      </div>
+    </section>
+
+    <section class="panel reveal-panel">
+      <p class="eyebrow">RELIABILITY & RECOVERY</p>
+      <h2>Failure-aware automation for real operations</h2>
+      <div class="statement-grid">
+        <p>Checkpointed workflow state supports safe resume after worker restarts or transient infrastructure events.</p>
+        <p>Retry policies distinguish temporary connector failures from permanent validation errors.</p>
+        <p>Dead-letter queues preserve failed jobs for triage instead of losing operational context.</p>
+        <p>Compensation steps can reverse partial actions or open a review task when automatic recovery is unsafe.</p>
+        <p>Observability metrics expose step latency, queue pressure, failure trends, approval dwell time, and recovery outcomes.</p>
+      </div>
+    </section>
+
+    <section class="panel reveal-panel">
+      <p class="eyebrow">DEVELOPER EXTENSIBILITY</p>
+      <h2>Open where teams need control</h2>
+      <div class="statement-grid">
+        <p>Define workflows as versioned artifacts that can move through code review, release notes, and rollback procedures.</p>
+        <p>Create custom connectors with typed inputs, scoped secrets, validation rules, and structured outputs.</p>
+        <p>Expose internal tools to AI-assisted steps through policy-mediated tool contracts and approval-aware execution.</p>
+        <p>Use APIs to start runs, inspect status, export histories, register connectors, and integrate with existing dashboards.</p>
+        <p>Model deterministic steps, AI steps, manual tasks, and external callbacks in the same operational workflow graph.</p>
+      </div>
+    </section>
+
+    <section class="panel reveal-panel">
+      <p class="eyebrow">USE CASE MATRIX</p>
+      <h2>Built for operational teams with different risk profiles</h2>
+      <div class="module-grid">
+        <article><h3>Operations</h3><p>Automate approvals, escalations, data syncs, vendor checks, status reports, and exception queues while preserving owner accountability.</p></article>
+        <article><h3>Engineering</h3><p>Coordinate deploy gates, incident handoffs, repository events, change requests, infrastructure jobs, and post-release verification.</p></article>
+        <article><h3>Security</h3><p>Route alerts, enrich indicators, open cases, require containment approval, preserve evidence, and export incident timelines.</p></article>
+        <article><h3>Internal Tooling</h3><p>Turn repetitive back-office actions into governed workflows that connect forms, databases, permissions, and notifications.</p></article>
+        <article><h3>AI Operations</h3><p>Insert AI classification, summarization, drafting, and recommendations into workflows without allowing autonomous high-impact actions.</p></article>
+      </div>
+    </section>
+
+    <section class="panel reveal-panel">
+      <p class="eyebrow">CONDUIT VS GENERIC SAAS AUTOMATION</p>
+      <h2>Control changes the operating model</h2>
+      <div class="comparison-grid">
+        <article><h3>Data boundary</h3><p>Generic SaaS automation often moves payloads, logs, and secrets through a third-party runtime. CONDUIT is designed to execute inside your own infrastructure boundary.</p></article>
+        <article><h3>Governance depth</h3><p>Generic tools optimize for quick connectors. CONDUIT prioritizes approval gates, audit trails, versioned definitions, environment isolation, and role-based operational control.</p></article>
+        <article><h3>Operational extensibility</h3><p>Generic platforms depend on prebuilt actions. CONDUIT lets technical teams build connectors, define policies, control workers, and adapt the execution model to real systems.</p></article>
+      </div>
+    </section>
+
+    <section class="panel reveal-panel">
+      <p class="eyebrow">WHY SELF-HOSTED WINS</p>
+      <h2>Automation becomes infrastructure when it touches critical work</h2>
+      <p>Self-hosting gives teams custody of execution, telemetry, secrets, latency, and change control. For simple automations, convenience can be enough. For workflows that touch customers, security posture, internal systems, regulated data, or operational decisions, the automation layer should be inspectable, recoverable, and governed like production infrastructure.</p>
+    </section>
+
+    <section class="panel final-cta reveal-panel">
+      <p class="eyebrow">DEPLOYMENT DECISION</p>
+      <h2>Bring CONDUIT into your operating environment</h2>
+      <p>Map your highest-value workflows, identify approval boundaries, define connector priorities, and deploy a self-hosted automation layer that your operators, developers, and security stakeholders can trust.</p>
+      <a class="btn primary" href="contact.html">Start the Deployment Conversation</a>
+    </section>
+  </main>
+
+  <footer class="site-footer" aria-label="Global footer">
+    <div class="footer-meta">
+      <span>© <span id="year"></span> ClearGlassInc Artemis</span>
+      <span>All rights reserved</span>
+    </div>
+    <nav class="footer-nav" aria-label="Footer utility navigation">
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="trust.html">Security</a>
+      <a href="trust.html#status">Status</a>
+      <a href="about.html">Community</a>
+      <a href="docs/ARTEMIS_PLATFORM_ARCHITECTURE.md">Docs</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
