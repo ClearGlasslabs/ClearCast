@@ -57,6 +57,103 @@
       <a class="btn primary" href="services.html">Review Services</a>
     </section>
 
+    <section class="intelligence-console panel" aria-labelledby="console-title">
+      <div class="console-heading">
+        <div>
+          <p class="eyebrow">ARTEMIS CONTROL PLANE // ARCHITECTURE VIEW</p>
+          <h2 id="console-title">Intelligence operations, visible at a glance.</h2>
+        </div>
+        <span class="console-state"><i aria-hidden="true"></i> DESIGN BASELINE</span>
+      </div>
+
+      <div class="console-grid">
+        <figure class="network-visual" aria-labelledby="network-caption">
+          <svg viewBox="0 0 760 430" role="img" aria-labelledby="network-title network-desc">
+            <title id="network-title">ClearGlass Artemis intelligence network</title>
+            <desc id="network-desc">An illustrative network showing policy, identity, telemetry, AI orchestration, recovery, and audit controls linked through the Artemis control plane.</desc>
+            <defs>
+              <radialGradient id="coreGlow">
+                <stop offset="0" stop-color="#dffcff" stop-opacity=".96"/>
+                <stop offset=".25" stop-color="#56f1ff" stop-opacity=".75"/>
+                <stop offset="1" stop-color="#56f1ff" stop-opacity="0"/>
+              </radialGradient>
+              <filter id="softGlow"><feGaussianBlur stdDeviation="4"/></filter>
+            </defs>
+            <g class="net-orbits" fill="none">
+              <ellipse cx="380" cy="215" rx="250" ry="118"/>
+              <ellipse cx="380" cy="215" rx="184" ry="170" transform="rotate(-18 380 215)"/>
+              <ellipse cx="380" cy="215" rx="286" ry="72" transform="rotate(22 380 215)"/>
+            </g>
+            <g class="net-links">
+              <path d="M380 215L182 120M380 215L580 104M380 215L650 235M380 215L542 346M380 215L260 360M380 215L104 270"/>
+              <path d="M182 120L104 270L260 360L542 346L650 235L580 104L182 120"/>
+              <path d="M182 120L542 346M580 104L260 360M104 270L650 235"/>
+            </g>
+            <g class="net-particles">
+              <circle cx="140" cy="102" r="3"/><circle cx="230" cy="82" r="2"/><circle cx="316" cy="112" r="3"/>
+              <circle cx="472" cy="78" r="2"/><circle cx="620" cy="148" r="3"/><circle cx="694" cy="206" r="2"/>
+              <circle cx="624" cy="324" r="2"/><circle cx="476" cy="380" r="3"/><circle cx="330" cy="376" r="2"/>
+              <circle cx="176" cy="332" r="3"/><circle cx="72" cy="220" r="2"/><circle cx="292" cy="232" r="2"/>
+              <circle cx="455" cy="256" r="3"/><circle cx="404" cy="140" r="2"/><circle cx="350" cy="292" r="2"/>
+            </g>
+            <g class="net-node">
+              <circle cx="182" cy="120" r="10"/><text x="182" y="96">IDENTITY</text>
+              <circle cx="580" cy="104" r="10"/><text x="580" y="80">POLICY</text>
+              <circle cx="650" cy="235" r="10"/><text x="650" y="266">AI GATE</text>
+              <circle cx="542" cy="346" r="10"/><text x="542" y="378">RECOVERY</text>
+              <circle cx="260" cy="360" r="10"/><text x="260" y="392">AUDIT</text>
+              <circle cx="104" cy="270" r="10"/><text x="104" y="301">TELEMETRY</text>
+            </g>
+            <circle class="core-halo" cx="380" cy="215" r="82"/>
+            <circle class="core-ring" cx="380" cy="215" r="43"/>
+            <circle class="core-dot" cx="380" cy="215" r="16"/>
+            <text class="core-label" x="380" y="267">ARTEMIS</text>
+          </svg>
+          <figcaption id="network-caption">
+            <span>CONTROL GRAPH 01</span>
+            Illustrative architecture view — no fabricated live telemetry.
+          </figcaption>
+        </figure>
+
+        <div class="mini-dashboard" aria-label="Artemis platform control summary">
+          <div class="mini-title">
+            <span>CONTROL SUMMARY</span>
+            <span>REFERENCE MODEL</span>
+          </div>
+          <div class="mini-kpis">
+            <article>
+              <span class="kpi-icon">P</span>
+              <div><strong>Policy gates</strong><small>Deny-by-default boundaries</small></div>
+              <b>ENFORCED</b>
+            </article>
+            <article>
+              <span class="kpi-icon">T</span>
+              <div><strong>Traceability</strong><small>Intent → decision → action</small></div>
+              <b>END TO END</b>
+            </article>
+            <article>
+              <span class="kpi-icon">R</span>
+              <div><strong>Recovery</strong><small>Rollback-safe delivery</small></div>
+              <b>DESIGNED</b>
+            </article>
+          </div>
+          <div class="risk-grid" aria-label="Automation risk controls">
+            <div><span>R0</span><strong>Observe</strong><i></i></div>
+            <div><span>R1</span><strong>Advise</strong><i></i></div>
+            <div><span>R2</span><strong>Change</strong><i></i></div>
+            <div><span>R3</span><strong>Approve</strong><i></i></div>
+          </div>
+          <div class="control-flow">
+            <p><span>01</span> Authenticate workload</p>
+            <p><span>02</span> Evaluate policy and risk</p>
+            <p><span>03</span> Execute within quota</p>
+            <p><span>04</span> Verify, audit, recover</p>
+          </div>
+          <a class="console-link" href="trust.html">Inspect the Trust Center <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+
     <section class="panel split-grid">
       <div>
         <h2>Company Overview</h2>
