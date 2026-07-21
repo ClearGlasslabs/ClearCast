@@ -13,19 +13,17 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-
 HTML_MD_SUFFIXES = {".html", ".md"}
 REQUIRED_FILES = [
-    "README.md",
-    "index.html",
-    "privacy.html",
-    "terms.html",
-    "CNAME",
+    "README.md", "index.html", "privacy.html", "terms.html", "CNAME",
     ".github/workflows/jekyll-docker.yml",
 ]
-
-HTML_REF_RE = re.compile(r"(?:href|src)=[\"']([^\"'#?]+)")
-MD_REF_RE = re.compile(r"\[[^\]]+\]\(([^)#?]+)")
+HTML_REF_RE = re.compile(r"""(?:href|src)=["']([^"'#?]+)""")
+MD_REF_RE = re.compile(r"""\[[^\]]+\]\(([^)#?]+)""")
+FENCED_CODE_RE = re.compile(
+    r"^[ \t]*([\x60]{3,}|~{3,}).*?^[ \t]*\1[ \t]*$",
+    re.MULTILINE | re.DOTALL,
+)
 
 
 def is_external(link: str) -> bool:
@@ -38,6 +36,11 @@ def resolve_target(source: Path, link: str) -> Path:
     return (source.parent / link).resolve()
 
 
+def markdown_without_fenced_code(text: str) -> str:
+    """Remove fenced examples so code syntax is never treated as a Markdown link."""
+    return FENCED_CODE_RE.sub("", text)
+
+
 def scan_links() -> list[str]:
     errors: list[str] = []
     for source in ROOT.rglob("*"):
@@ -46,7 +49,7 @@ def scan_links() -> list[str]:
         text = source.read_text(encoding="utf-8", errors="ignore")
         refs = HTML_REF_RE.findall(text)
         if source.suffix.lower() == ".md":
-            refs.extend(MD_REF_RE.findall(text))
+            refs.extend(MD_REF_RE.findall(markdown_without_fenced_code(text)))
         for link in refs:
             if not link or is_external(link):
                 continue
