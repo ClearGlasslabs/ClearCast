@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="ClearGlass Vision: privacy-first, on-device camera intelligence.">
+  <title>ClearGlass Vision // Edge Camera Console</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="../index.html" aria-label="ClearGlass home"><span class="mark">CG</span><span>ClearGlass <b>VISION</b></span></a><div class="status"><i id="systemDot"></i><span id="systemStatus">Standby</span></div></header>
+<main>
+<section class="hero">
+  <div><p class="eyebrow">ARTEMIS EDGE NODE // AUTHORIZED USE ONLY</p><h1>Camera intelligence<br><em>processed on your device.</em></h1><p class="lede">Live object detection for authorized cameras. No facial identification. No cloud upload. Operator-controlled event capture.</p></div>
+  <div class="metrics" aria-label="Session metrics"><div><span id="fps">0</span><small>INFERENCE FPS</small></div><div><span id="objectCount">0</span><small>OBJECTS</small></div><div><span id="eventCount">0</span><small>EVENTS</small></div></div>
+</section>
+<section class="console">
+  <div class="viewer">
+    <div class="viewer-head"><span>NODE 01 / LIVE OPTICAL FEED</span><span id="clock">--:--:-- UTC</span></div>
+    <div class="stage" id="stage"><video id="video" playsinline muted></video><canvas id="overlay"></canvas><div class="placeholder" id="placeholder"><span class="reticle"></span><strong>NO SIGNAL</strong><small>Start an authorized camera or load a local recording</small></div><div class="scanline"></div></div>
+    <div class="controls">
+      <button class="primary" id="startBtn">Start camera</button><button id="stopBtn" disabled>Stop</button>
+      <label class="file">Load recording<input id="fileInput" type="file" accept="video/*"></label>
+      <button id="captureBtn" disabled>Capture evidence</button>
+    </div>
+    <p class="consent"><input id="consent" type="checkbox"> <label for="consent">I confirm I am authorized to operate this camera and process this footage.</label></p>
+  </div>
+  <aside>
+    <div class="panel"><div class="panel-title"><span>ACTIVE DETECTIONS</span><span class="pulse">LIVE</span></div><div id="detections" class="empty">Awaiting signal.</div></div>
+    <div class="panel"><div class="panel-title"><span>EVENT LEDGER</span><button class="text-btn" id="clearBtn">Clear</button></div><ol id="events"><li class="empty">No events recorded.</li></ol><button id="exportBtn" class="wide">Export session JSON</button></div>
+    <div class="panel policy"><div class="panel-title"><span>PRIVACY GUARDRAILS</span></div><ul><li>On-device inference</li><li>No biometric identification</li><li>No automatic recording</li><li>Operator consent gate</li><li>SHA-256 evidence hashes</li></ul></div>
+  </aside>
+</section>
+</main>
+<footer>ClearGlassInc // Founder: Desmond Otieno Odhiambo // Defensive, authorized deployment only</footer>
+</body></html>
