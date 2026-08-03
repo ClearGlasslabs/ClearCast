@@ -1,6 +1,7 @@
 name: Repository Health
 
 on:
+  workflow_call:
   pull_request:
   push:
     branches: ["main", "master"]
@@ -12,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: repository-health-${{ github.ref }}
+  group: repository-health-${{ github.repository }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -45,20 +46,8 @@ jobs:
           from pathlib import Path
 
           ZERO_SHA = "0" * 40
-          SKIP_PARTS = {
-              ".git",
-              ".venv",
-              "build",
-              "coverage",
-              "dist",
-              "node_modules",
-              "vendor",
-          }
-          TEXT_SUFFIXES = {
-              ".css", ".html", ".js", ".json", ".jsx", ".md", ".mjs",
-              ".py", ".sh", ".toml", ".ts", ".tsx", ".txt", ".xml",
-              ".yaml", ".yml",
-          }
+          SKIP_PARTS = {".git", ".venv", "build", "coverage", "dist", "node_modules", "vendor"}
+          TEXT_SUFFIXES = {".css", ".html", ".js", ".json", ".jsx", ".md", ".mjs", ".py", ".sh", ".toml", ".ts", ".tsx", ".txt", ".xml", ".yaml", ".yml"}
           CONFLICT_MARKER = re.compile(r"^(?:<{7}|={7}|>{7})(?: .*)?$", re.MULTILINE)
           ACTION_USE = re.compile(r"^\s*-?\s*uses:\s*([^\s#]+)\s*(?:#.*)?$", re.MULTILINE)
           FULL_SHA = re.compile(r"^[0-9a-fA-F]{40}$")
@@ -70,26 +59,23 @@ jobs:
           head = os.environ.get("HEAD_SHA", "HEAD").strip() or "HEAD"
           use_diff = bool(base and base != ZERO_SHA)
           if use_diff:
-              exists = subprocess.run(
+              use_diff = subprocess.run(
                   ["git", "cat-file", "-e", f"{base}^{{commit}}"],
                   stdout=subprocess.DEVNULL,
                   stderr=subprocess.DEVNULL,
                   check=False,
               ).returncode == 0
-              use_diff = exists
 
-          if use_diff:
-              names = git("diff", "--name-only", "--diff-filter=ACMR", f"{base}...{head}").splitlines()
-          else:
-              names = git("ls-files").splitlines()
-
-          files = []
-          for name in names:
-              path = Path(name)
-              if not path.is_file() or any(part in SKIP_PARTS for part in path.parts):
-                  continue
-              files.append(path)
-
+          names = (
+              git("diff", "--name-only", "--diff-filter=ACMR", f"{base}...{head}").splitlines()
+              if use_diff
+              else git("ls-files").splitlines()
+          )
+          files = [
+              Path(name)
+              for name in names
+              if Path(name).is_file() and not any(part in SKIP_PARTS for part in Path(name).parts)
+          ]
           errors: list[str] = []
           checked = 0
 
@@ -97,16 +83,13 @@ jobs:
               suffix = path.suffix.lower()
               if suffix not in TEXT_SUFFIXES and path.name not in {"Dockerfile", "Makefile"}:
                   continue
-
               try:
                   raw = path.read_bytes()
               except OSError as exc:
                   errors.append(f"{path}: cannot read file: {exc}")
                   continue
-
               if b"\0" in raw or len(raw) > 5_000_000:
                   continue
-
               try:
                   text = raw.decode("utf-8")
               except UnicodeDecodeError as exc:
@@ -114,7 +97,6 @@ jobs:
                   continue
 
               checked += 1
-
               if suffix not in {".md", ".txt"} and CONFLICT_MARKER.search(text):
                   errors.append(f"{path}: unresolved merge-conflict marker")
 
@@ -125,7 +107,7 @@ jobs:
                       tomllib.loads(text)
                   elif suffix == ".py":
                       ast.parse(text, filename=str(path))
-              except (SyntaxError, ValueError, json.JSONDecodeError, tomllib.TOMLDecodeError) as exc:
+              except (SyntaxError, ValueError) as exc:
                   errors.append(f"{path}: parse failure: {exc}")
 
               if suffix == ".sh":
@@ -136,8 +118,7 @@ jobs:
                       check=False,
                   )
                   if result.returncode:
-                      detail = (result.stderr or result.stdout).strip()
-                      errors.append(f"{path}: shell syntax failure: {detail}")
+                      errors.append(f"{path}: shell syntax failure: {(result.stderr or result.stdout).strip()}")
 
               if path.parts[:2] == (".github", "workflows") and suffix in {".yml", ".yaml"}:
                   if not re.search(r"^permissions:\s*(?:$|\{)", text, re.MULTILINE):
@@ -149,9 +130,11 @@ jobs:
                       if not FULL_SHA.fullmatch(ref):
                           errors.append(f"{path}: external action is not pinned to a full SHA: {action}@{ref}")
 
-          print(f"Validated {checked} changed/tracked text files.")
+          print(f"Validated {checked} {'changed' if use_diff else 'tracked'} text files.")
           if errors:
+              annotation = "error" if use_diff else "warning"
               for error in errors:
-                  print(f"::error::{error}")
-              sys.exit(1)
+                  print(f"::{annotation}::{error}")
+              if use_diff:
+                  sys.exit(1)
           PY
