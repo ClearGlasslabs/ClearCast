@@ -1,0 +1,75 @@
+name: ClearGlass README Branding
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/clearglass-brand-request
+
+permissions:
+  contents: write
+
+jobs:
+  brand:
+    if: github.event.head_commit.message == 'chore(brand): request ClearGlass README branding'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Apply ClearGlass logo
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/branding
+          curl -fsSL --retry 3 --retry-delay 2 \
+            'https://raw.githubusercontent.com/ClearGlasslabs/ClearGlassInc./brand-assets/clearglass-seal.jpg' \
+            -o assets/branding/clearglass-seal.jpg
+          test -s assets/branding/clearglass-seal.jpg
+
+          marker='<!-- CLEARGLASS-BRAND:START -->'
+          if [[ -f README.md ]]; then
+            if ! grep -Fq "$marker" README.md; then
+              tmp="$(mktemp)"
+              cat > "$tmp" <<'EOF'
+          <!-- CLEARGLASS-BRAND:START -->
+          <p align="center">
+            <a href="https://www.clearglassinc.com/">
+              <img src="assets/branding/clearglass-seal.jpg" alt="ClearGlass Inc." width="360" />
+            </a>
+          </p>
+          <!-- CLEARGLASS-BRAND:END -->
+
+          EOF
+              cat README.md >> "$tmp"
+              mv "$tmp" README.md
+            fi
+          else
+            repo_name="${GITHUB_REPOSITORY#*/}"
+            cat > README.md <<EOF
+          <!-- CLEARGLASS-BRAND:START -->
+          <p align="center">
+            <a href="https://www.clearglassinc.com/">
+              <img src="assets/branding/clearglass-seal.jpg" alt="ClearGlass Inc." width="360" />
+            </a>
+          </p>
+          <!-- CLEARGLASS-BRAND:END -->
+
+          # ${repo_name}
+          EOF
+          fi
+
+          rm -f .github/clearglass-brand-request
+          rm -f .github/workflows/clearglass-brand-one-shot.yml
+
+          git config user.name 'ClearGlass Brand Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'chore(brand): standardize ClearGlass repository logo'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
