@@ -1,3 +1,11 @@
+<!-- CLEARGLASS-BRAND:START -->
+<p align="center">
+  <a href="https://www.clearglassinc.com/">
+    <img src="https://raw.githubusercontent.com/ClearGlasslabs/ClearGlassInc./brand-assets/clearglass-seal.jpg" alt="ClearGlass Inc." width="360" />
+  </a>
+</p>
+<!-- CLEARGLASS-BRAND:END -->
+
 # ClearGlassInc Artemis
 
 ClearGlassInc Artemis is an enterprise cybersecurity and intelligence engineering platform founded by **Desmond Otieno Odhiambo**. This repository contains a premium corporate website layer, governance documentation, and a production-grade architecture blueprint for secure, AI-enabled operations.
