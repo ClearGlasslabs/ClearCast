@@ -3,8 +3,8 @@
 
 Checks:
 1) Internal links in HTML/Markdown resolve to tracked files.
-2) Required repo assets exist.
-3) Workflow hygiene (trigger + permissions on deploy workflows).
+2) Required production assets exist.
+3) Workflow hygiene (explicit permissions + manual dispatch for deployment paths).
 """
 from __future__ import annotations
 
@@ -15,8 +15,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 HTML_MD_SUFFIXES = {".html", ".md"}
 REQUIRED_FILES = [
-    "README.md", "index.html", "privacy.html", "terms.html", "CNAME",
-    ".github/workflows/jekyll-docker.yml",
+    "README.md",
+    "index.html",
+    "styles.css",
+    "script.js",
+    "privacy.html",
+    "terms.html",
+    "CNAME",
+    ".nojekyll",
+    ".github/workflows/deploy-pages.yml",
 ]
 HTML_REF_RE = re.compile(r"""(?:href|src)=["']([^"'#?]+)""")
 MD_REF_RE = re.compile(r"""\[[^\]]+\]\(([^)#?]+)""")
@@ -65,6 +72,9 @@ def check_required_files() -> list[str]:
     for file_name in REQUIRED_FILES:
         if not (ROOT / file_name).exists():
             errors.append(f"Missing required file: {file_name}")
+    cname = ROOT / "CNAME"
+    if cname.exists() and cname.read_text(encoding="utf-8").strip() != "clearglassinc.io":
+        errors.append("CNAME must contain exactly clearglassinc.io")
     return errors
 
 
